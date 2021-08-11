@@ -1,4 +1,4 @@
-import {$} from "./../tie.js";
+import {$} from "../tie.js";
 import {colors} from "./colors.js"
 const css = `
 	.Button

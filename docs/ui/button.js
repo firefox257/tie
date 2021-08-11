@@ -1,5 +1,5 @@
-import {$} from "./tie.js";
-import {colors} from "./ui/colors.js"
+import {$} from "../tie.js";
+import {colors} from "./colors.js"
 const css = `
 	.Button
 	{

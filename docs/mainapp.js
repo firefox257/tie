@@ -1,7 +1,7 @@
 
 import {$} from "./tie.js";
 import {} from "./ui/ui.js";
-import {colors} from ".s/ui/colors.js";
+import {colors} from "./ui/colors.js";
 const css = `
 body
 {

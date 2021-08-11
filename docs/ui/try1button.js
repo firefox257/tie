@@ -1,5 +1,5 @@
-import {$} from "/tie.js";
-import {} from "/ui/ui.js";
+import {$} from "../tie.js";
+import {} from "./ui.js";
 
 const html = `
 <comp tietype="button" color ="danger" tieinner tieobj="obj"></comp>

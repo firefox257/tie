@@ -27,7 +27,7 @@ example
 
 
 
-import {$} from "../tie.js";
+import {$} from "/tie.js";
 
 const css = `
 

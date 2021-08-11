@@ -1,7 +1,8 @@
-const global = (0,eval)("this");
-import {$} from global.import("tie.js");
-import {} from global.import("ui/ui.js");
-import {colors} from global.import("ui/colors.js");
+//const global = (0,eval)("this");
+import {$} from "./tie.js";
+import {} from "./ui/ui.js";
+import {colors} from "./ui/colors.js";
+
 
 
 

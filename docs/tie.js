@@ -1,7 +1,7 @@
-const $import = (0,eval)("this");
+//const $import = (0,eval)("this");
 
 export var $global = {};
-$importer.$global = $global;
+
 
 export function $q(p, o)
 {
@@ -11,7 +11,7 @@ export function $q(p, o)
 	}
 	return document.querySelector(p);
 }
-$importer.$q = $q;
+
 
 export function $qa(p, o)
 {
@@ -22,7 +22,7 @@ export function $qa(p, o)
 	return document.querySelectorAll(p);
 	
 }
-$importer.$qa = $qa;
+
 
 export function $attr(dom, a, s)
 {

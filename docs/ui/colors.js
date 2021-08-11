@@ -1,4 +1,5 @@
-import {$} from "../tie.js";
+const global = (0,eval)("this");
+import {$} from global.import("tie.js");
 
 const black = "#000";
 const gray1 = "#333";

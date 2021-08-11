@@ -1,6 +1,6 @@
-
-import {$} from "../tie.js";
-import {colors} from "./colors.js";
+const global = (0,eval)("this");
+import {$} from global.import("tie.js");
+import {colors} from global.import("ui/colors.js");
 
 const css = `
 .checkbox-unchecked

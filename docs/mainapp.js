@@ -41,6 +41,7 @@ block
 
 const html = `
 <div class ="full">
+<!--
 <comp tietype="button" color="ok">hi there</comp>
 <br/>
 <comp tietype="try1button" tieevents="onclick2:onclick">aasdf</comp>
@@ -112,7 +113,7 @@ const html = `
 </comp>
 <br />
 <comp tietype="input" type="date" color="ok"></comp>
-
+-->
 </div>
 
 `;

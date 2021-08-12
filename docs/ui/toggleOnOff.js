@@ -27,7 +27,7 @@ const css = `
 	color: ${colors.black};
 	padding: 0;
 	width: 6mm;
-	height: 3mm;
+	height: 3.3mm;
 	position:absolute;
 	top: 0;
 	left: 0;
@@ -38,7 +38,7 @@ const css = `
 	color: ${colors.default};
 	padding: o;
 	width: 6mm;
-	height: 3mm;
+	height: 3.3mm;
 	position:absolute;
 	top: 0;
 	left: 6mm;

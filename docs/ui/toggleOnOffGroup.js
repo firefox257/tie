@@ -138,10 +138,7 @@ function toggleOnOffGroup()
 			{
 				var item = at.code[i];
 				var html = `
-				<div>
 					${i} <comp tietype="toggleOnOffValue" value = "${item.value}" state= "${item.state}" tieevents="onchange:onchange" tieobj="additem" color="${at.color}"></comp>
-				</div>
-				
 				`;
 				$.append(at, at.atdom,html);
 				if(item.state) at.value = item.value;

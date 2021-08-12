@@ -7,4 +7,4 @@ import {} from "./modal.js";
 import {} from "./colors.js"
 import {} from "./try1button.js";
 import {} from "./input.js";
-
+import {} from "./padlock.js";

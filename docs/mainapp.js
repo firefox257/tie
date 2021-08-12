@@ -12,7 +12,7 @@ body
 	font-size: 4mm;
 	background-color: ${colors.background};
 	color: ${colors.default};
-	mix-blend-mode: lighten;
+	mix-blend-mode1: lighten;
 }
 .full
 {
@@ -92,7 +92,7 @@ const html = `
 <br/>
 
 
-<comp tietype="checkbox" color="#00ff88" checked="0" tieevents="onchange1:onchange"></comp>
+<comp tietype="checkbox" color="ok" checked="0" tieevents="onchange1:onchange"></comp>
 
 <comp tietype="modal" show="0" tieobj="atmodal">
 <table>
@@ -112,7 +112,9 @@ const html = `
 </table>
 </comp>
 <br />
-<comp tietype="input" type="date" color="ok"></comp>
+<comp tietype="input" type="text" color="ok"></comp><br/><br/>
+
+<comp tietype="padlock" width="15mm" height="15mm" color="info" blur="0.7" ></comp>
 
 </div>
 

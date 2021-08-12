@@ -7,7 +7,7 @@ const css = `
 	display:inline-block;
 	border-radius: 3mm;
 	height: 3mm;
-	width: 6mm;
+	width: 5.7mm;
 	color: #fff;
 	padding: 0;
 	margin: 0;
@@ -20,47 +20,82 @@ const css = `
 	font-size: 2.5mm;
 	user-select: none;
 	border: 0.3mm solid;
+	overflow: hidden;
 }
-
 .toggleOn
 {
-	border-radius: 3mm;
-	text-align: center;
 	color: ${colors.black};
 	padding: 0;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%); 
-
+	width: 6mm;
+	height: 3mm;
+	position:absolute;
+	top: 0;
+	left: 0;
 }
 .toggleOff
 {
 	text-shadow: 1px 1px #000, 0px 1px #000;
-	text-align: center;
 	color: ${colors.default};
 	padding: o;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%); 
-
+	width: 6mm;
+	height: 3mm;
+	position:absolute;
+	top: 0;
+	left: 6mm;
 }
 
+.toggleOnStart
+{
+	transform: translate(6mm, 0);
+}
+.tobbleOffStart
+{
 
+	.transform: translate(0, 0);
+}
+.toggleOnAnim
+{
+	animation-name: turnon;
+	animation-duration: 0.3s;
+	transform: translate(6mm, 0);
+}
+.toggleOffAnim
+{
+	animation-name: turnoff;
+	animation-duration: 0.3s;
+	transform: translate(0, 0);
+}
+@keyframes turnoff
+{
+	from {transform: translate(6mm, 0);}
+	to {transform: translate(0, 0);}
+}
 
-
+@keyframes turnon
+{
+	from {transform: translate(0, 0);}
+	to {transform: translate(6mm, 0);}
+}
 
 `;
 
 const html = `
-<span tieclass="parentclass" tieattributes="parentstyle:style" tie="boxshadow:style.boxShadow, border:style.border, backgroundcolor:style.backgroundColor " tieevents="onclick:onclick">
-	<span class = "toggleOn" tie="onshow:style.display">
-		ON
+<span tieclass="parentclass" tieattributes="parentstyle:style" tie="boxshadow:style.boxShadow, border:style.border" tieevents="onclick:onclick">
+<span style="position:absolute; top: 0; right: 0; width: 12mm;" tieclass="class">
+	<span class = "toggleOn" tie="backgroundcolor:style.backgroundColor">	
+		<span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+			ON
+		</span>
 	</span>
-	<span class = "toggleOff" tie="offshow:style.display">
-		Off
+
+	<span class="toggleOff">
+		<span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+			Off
+		</span>
 	</span>
+</span>
+	
+	
 </span>
 `;
 
@@ -72,7 +107,7 @@ function toggleOnOff()
 		{
 			get state()
 			{
-				if(at.class == "toggleOnOff-On")
+				if(at.class == "toggleOnStart" || at.class == "toggleOnAnim")
 				{
 					return true;
 				}
@@ -85,19 +120,34 @@ function toggleOnOff()
 			{
 				if(v == true)
 				{
-					at.class = "toggleOnOff-On";
+					if(at.class == "toggleOnStart" || at.class == "toggleOnAnim") return;
+					if(!at.hasafter)
+					{
+						at.class = "toggleOnStart";
+					}
+					else
+					{
+						at.class = "toggleOnAnim";
+					}
 					at.boxshadow = "0 0 2mm " + at.color;
 					at.border = "0.3mm solid " + at.color;
-					at.backgroundcolor = at.color;
 					at.onshow="inline-block";
 					at.offshow = "none";
 				}
 				else
 				{
-					at.class = "toggleOnOff-Off";
+					if(at.class == "toggleOffStart" || at.class == "toggleOffAnim") return;
+					if(!at.hasafter)
+					{
+						at.class = "toggleOffStart";
+					}
+					else
+					{
+						at.class = "toggleOffAnim";
+					}
+						
 					at.boxshadow = "0 0 0";
 					at.border = "0.3mm solid #888";
-					at.backgroundcolor = colors.compbackground;
 					at.onshow="none";
 					at.offshow="inline-block";
 				}
@@ -112,6 +162,7 @@ function toggleOnOff()
 			{
 				at.color = colors[v];
 				at.attributes.state = at.attributes.state;
+				at.backgroundcolor = at.color;
 			}, 
 			get class()
 			{
@@ -133,7 +184,7 @@ function toggleOnOff()
 		},//end attributes
 		parentclass: "toggleOuter",
 		parrentstyle: "",
-		class: "toggleOnOff-Off-Start",
+		class: "toggleOffStart",
 		color: colors.default,
 		backgroundcolor: colors.compbackground,
 		boxshadow: "0 0 0",

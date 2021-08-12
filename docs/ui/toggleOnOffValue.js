@@ -7,9 +7,7 @@ const css = `
 
 `;
 const html = `
-<span style = "display:inline-block; vertical-align: middle;">
 	<comp tietype="toggleOnOff" tieobj="toggle" tieevents="onchange:onchange"></comp>
-</span>
 `;
 
 function toggleOnOffValue()

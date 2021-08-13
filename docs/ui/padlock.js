@@ -186,11 +186,39 @@ function padlockfunc()
 		color: colors.default,
 		blur: "2.3314279",
 		atdom:undefined,
+		locked: true,
 		animate:
 		{
 			transform:"translate(8.4, 15) rotate(360)",
-			unlock: "translate(8.4, 13) rotate(330)",
-			lock: "translate(8.4, 15) rotate(360)"
+			/*unlock: "translate(8.4, 13) rotate(330)",
+			lock: "translate(8.4, 15) rotate(360)"*/
+			unlock()
+			{
+				animate(
+				{
+					from: [8.4, 15, 360],
+					to: [8.4, 13, 330],
+					duration: 200,
+					callback(v)
+					{
+						at.animate.transform = `translate(${v[0]}, ${v[1]}) rotate(${v[2]})`;
+					}
+				});
+			}, 
+			lock()
+			{
+				animate(
+				{
+					from:  [8.4, 13, 330],
+					to:[8.4, 15, 360],
+					duration: 200,
+					callback(v)
+					{
+						at.animate.transform = `translate(${v[0]}, ${v[1]}) rotate(${v[2]})`;
+					}
+				});
+			}
+			
 
 		},
 		onclick(e)
@@ -202,6 +230,18 @@ function padlockfunc()
 			var y = e.clientY - at.atdom.offsetTop;
 			console.log("x " + x + " y "  + y);
 			if(at.attributes.onclick)at.attributes.onclick(e);
+			if(at.locked)
+			{
+				console.log("unlocking");
+				at.locked = false;
+				at.animate.unlock();
+			}
+			else
+			{
+				console.log("locking");
+				at.locked = true;
+				at.animate.lock();
+			}
 		},
 		init()
 		{
@@ -209,16 +249,7 @@ function padlockfunc()
 			//at.atdom.transform.animVal[0].setRotate(
 			//at.atdom.setAttribute("transform", "translate(8.4, 15) rotate(360)");
 			//at.animate.transform = at.animate.unlock;
-			animate(
-			{
-				from: [8.4, 15, 360],
-				to: [8.4, 13, 330],
-				duration: 4000,
-				callback(v)
-				{
-					at.animate.transform = `translate(${v[0]}, ${v[1]}) rotate(${v[2]})`;
-				}
-			});
+			
 			
 		}
 	};

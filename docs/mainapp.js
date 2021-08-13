@@ -114,7 +114,7 @@ const html = `
 <br />
 <comp tietype="input" type="text" color="ok"></comp><br/><br/>
 
-<comp tietype="padlock" width="70mm" height="70mm" color="notice" blur="0.5" ></comp><br/><br/>
+<comp tietype="padlock" width="5mm" height="5mm" color="notice" blur="1.3" ></comp><br/><br/>
 
 </div>
 

@@ -61,7 +61,9 @@ function doAnim()
 		
 	});
 	
+	
 	if(list.length > 0)setTimeout(doAnim, 0);
+	else started = false;
 }
 export function animate(obj)
 {

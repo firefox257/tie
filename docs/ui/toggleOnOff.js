@@ -21,12 +21,13 @@ const css = `
 	user-select: none;
 	border: 0.3mm solid;
 	overflow: hidden;
+	background-color: ${colors.background};
 }
 .toggleOn
 {
 	color: ${colors.black};
 	padding: 0;
-	width: 6mm;
+	width: 6.3mm;
 	height: 3.3mm;
 	position:absolute;
 	top: 0;

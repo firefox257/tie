@@ -122,6 +122,61 @@ export function $comp(name, o)
 	}
 };
 
+
+
+
+function createGetSet(o, path1, getfunc, setfunc)
+{
+	
+	
+	
+	var att = path1.split(".");
+	if(att.length <=1)
+	{
+		Object.defineProperty(o, path1, 
+		{
+			get:getfunc,
+			set:setfunc
+		});
+		
+	}
+	else
+	{
+		var atend = att.pop();
+		var pathp = att.join(".");
+		Object.defineProperty($fastpath(o, pathp), atend, 
+		{
+			get:getfunc,
+			set:setfunc
+		});
+	}
+	
+}
+function createGet(o, path1, getfunc)
+{
+	
+	
+	
+	var att = path1.split(".");
+	if(att.length <=1)
+	{
+		Object.defineProperty(o, path1, 
+		{
+			get:getfunc
+		});
+		
+	}
+	else
+	{
+		var atend = att.pop();
+		var pathp = att.join(".");
+		Object.defineProperty($fastpath(o, pathp), atend, 
+		{
+			get:getfunc
+		});
+	}
+	
+}
 //tie="objectname:domOrParentObj" tie dom stuff to object name. 
 function getDomTie(dom)
 {
@@ -237,20 +292,18 @@ function addCompAttributesSetTracker(po, o, path1, path2)
 
 function createCompAttributesGetSet(o, path1)
 {
-	Object.defineProperty(o, path1, 
+	createGetSet(o, path1,
+	function()
 	{
-		get: function()
+		return $fastpath(o.backerfields, path1);
+	},
+	function(v)
+	{
+		$fastpath(o.backerfields, path1, v);
+		var tracker = $fastpath(o.tracker, path1);
+		for(var i = 0; i < tracker.length; i++)
 		{
-			return $fastpath(o.backerfields, path1);
-		},
-		set: function(v)
-		{
-			$fastpath(o.backerfields, path1, v);
-			var tracker = $fastpath(o.tracker, path1);
-			for(var i = 0; i < tracker.length; i++)
-			{
-				tracker[i](v);
-			}
+			tracker[i](v);
 		}
 	});
 	
@@ -365,24 +418,22 @@ function addDomSetTracker(o, dom, path1, path2)
 
 function createTieGetSet(o, path1)
 {
-	Object.defineProperty(o, path1, 
+	
+	createGetSet(o, path1, 
+	function()
 	{
-		get: function()
+		return $fastpath(o.backerfields, path1);
+	},
+	function(v)
+	{
+		//potential @obj
+		$fastpath(o.backerfields, path1, v);
+		var tracker = $fastpath(o.tracker, path1);
+		for(var i = 0; i < tracker.length; i++)
 		{
-			return $fastpath(o.backerfields, path1);
-		},
-		set: function(v)
-		{
-			//potential @obj
-			$fastpath(o.backerfields, path1, v);
-			var tracker = $fastpath(o.tracker, path1);
-			for(var i = 0; i < tracker.length; i++)
-			{
-				tracker[i](v);
-			}
+			tracker[i](v);
 		}
 	});
-	
 }
 
 function setTieBackerTrackerFields(scaf, objscaf, domscaf)
@@ -433,14 +484,12 @@ function setTieEvents(scaf, objscaf, domscaf)
 
 function createTieReadGet(o, dom, path1, path2)
 {
-	Object.defineProperty(o, path1, 
-	{
-		get: function()
-		{
-			return $fastpath(dom, path2);
-		}
-	});
 	
+	createGet(o, path1,
+	function()
+	{
+		return $fastpath(dom, path2);
+	});
 }
 
 function setTieRead(scaf, objscaf, domscaf)
@@ -467,24 +516,21 @@ function addDomSetClassTracker(o, dom, path)
 
 function createTieClassGetSet(o, path1)
 {
-	Object.defineProperty(o, path1, 
+	createGetSet(o, path1, 
+	function()
 	{
-		get: function()
+		return $fastpath(o.backerfields, path1);
+	},
+	function(v)
+	{
+		//potential @obj
+		$fastpath(o.backerfields, path1, v);
+		var tracker = $fastpath(o.tracker, path1);
+		for(var i = 0; i < tracker.length; i++)
 		{
-			return $fastpath(o.backerfields, path1);
-		},
-		set: function(v)
-		{
-			//potential @obj
-			$fastpath(o.backerfields, path1, v);
-			var tracker = $fastpath(o.tracker, path1);
-			for(var i = 0; i < tracker.length; i++)
-			{
-				tracker[i](v);
-			}
+			tracker[i](v);
 		}
 	});
-	
 }
 
 function setTieClass(scaf, objscaf, domscaf)
@@ -534,22 +580,25 @@ function addDomSetAttributesTracker(o, dom, path1, path2)
 	});
 }
 
+
+
+
 function createTieAttributesGetSet(o, path1)
 {
-	Object.defineProperty(o, path1, 
+	
+	
+	createGetSet(o, path1, 
+	function()
 	{
-		get: function()
+		return $fastpath(o.backerfields, path1);
+	},
+	function(v)
+	{
+		$fastpath(o.backerfields, path1, v);
+		var tracker = $fastpath(o.tracker, path1);
+		for(var i = 0; i < tracker.length; i++)
 		{
-			return $fastpath(o.backerfields, path1);
-		},
-		set: function(v)
-		{
-			$fastpath(o.backerfields, path1, v);
-			var tracker = $fastpath(o.tracker, path1);
-			for(var i = 0; i < tracker.length; i++)
-			{
-				tracker[i](v);
-			}
+			tracker[i](v);
 		}
 	});
 	
@@ -561,7 +610,8 @@ function setTieAttributes(scaf, objscaf, domscaf)
 	if(!tieattributes) return;
 	var o = objscaf.obj;
 	var dom = domscaf.dom;
-	
+	//console.log("setTieAttributes");
+	//console.log(objscaf.tempdom.firstChild);
 	for(var i = 0; i < tieattributes.length; i++)
 	{
 		if(!($fastpath(o, "backerfields." + tieattributes[i][0])) )
@@ -955,6 +1005,7 @@ export var $ = {
 	hasAttr: $hasAttr,
 	removeattr: $removeattr,
 	msgc: $msgc,
+	fastpath: $fastpath,
 	comp: $comp,
 	doc: $doc,
 	//parse: $parse,

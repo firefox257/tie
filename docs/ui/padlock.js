@@ -1,11 +1,11 @@
 import {$} from "../tie.js";
+import {animate} from "../animate.js";
 import {colors} from "./colors.js"
 
 const css = `
 .padlock
 {
 	display: inline-block;
-	
 }
 
 .try1
@@ -188,9 +188,9 @@ function padlockfunc()
 		atdom:undefined,
 		animate:
 		{
-			transform:"translate(8.4, 13) rotate(330)",
-			open: "translate(8.4, 13) rotate(330)",
-			close: "translate(8.4, 15) rotate(360)"
+			transform:"translate(8.4, 15) rotate(360)",
+			unlock: "translate(8.4, 13) rotate(330)",
+			lock: "translate(8.4, 15) rotate(360)"
 
 		},
 		onclick(e)
@@ -208,7 +208,17 @@ function padlockfunc()
 			console.log(at);
 			//at.atdom.transform.animVal[0].setRotate(
 			//at.atdom.setAttribute("transform", "translate(8.4, 15) rotate(360)");
-			at.animate.transform = at.animate.open;
+			//at.animate.transform = at.animate.unlock;
+			animate(
+			{
+				from: [8.4, 15, 360],
+				to: [8.4, 13, 330],
+				duration: 4000,
+				callback(v)
+				{
+					at.animate.transform = `translate(${v[0]}, ${v[1]}) rotate(${v[2]})`;
+				}
+			});
 			
 		}
 	};

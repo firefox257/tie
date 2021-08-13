@@ -819,8 +819,6 @@ function parseTempDom(scaf, objscaf)
 		}
 	}
 	
-
-	
 }
 
 function parseComp(scaf, dom, parentobjscaf)
@@ -866,16 +864,13 @@ function parseComp(scaf, dom, parentobjscaf)
 	remakeDom(objscaf);
 	parseTempDom(scaf, objscaf);
 	
-	
 	// set attributes on obj attributes
 	setCompDomAttributes(scaf, dom, objscaf);
 	
 	//set all ties from parent comps. 
 	setCompToParentCompTies(objscaf, parentobjscaf);
 	
-	
 	//todo set tempdom as dom.
-	
 	//replace dom
 	var atdom = objscaf.tempdom.firstChild;
 	atdom.parentobj = objscaf.obj;

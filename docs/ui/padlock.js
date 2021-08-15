@@ -1,16 +1,8 @@
-import {$} from "../tie.js";
-import {animate} from "../animate.js";
-import {colors} from "./colors.js"
 
 const css = `
 .padlock
 {
 	display: inline-block;
-}
-
-.try1
-{
-	
 }
 
 `;

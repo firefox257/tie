@@ -26,11 +26,11 @@ const css = `
 
 
 const html = `
-<input id="file-upload" tieattributes="type:type" class="textbox" tie="color:style.color" ></input>
+<input type = "file" class="textbox" tie="color:style.color" tieread="files:files" tieevents="onchange:onchange" tiedom="atdom"></input>
 `;
 
 
-function inputfunc()
+function inputFilesfunc()
 {
 	var at = 
 	{
@@ -44,29 +44,28 @@ function inputfunc()
 			{
 				at.color = colors[v];
 			},
-			get type()
+			get files()
 			{
-				return at.type;
+				return at.files;
 			},
-			set type(v)
-			{
-				console.log("set type" );
-				console.log(v);
-				at.type = v;
-			}
-			
+			onchange: undefined
 		},
+		onchange(e)
+		{
+			if(at.attributes.onchange) at.attributes.onchange(at.files);
+		},
+		atdom: undefined,
 		color: colors.default,
-		type: "text",
+		files: undefined,
 		init()
 		{
-			console.log("textbox init");
 		}
 	};
 	
 	return at;
 }
-inputfunc.css = css;
-inputfunc.html = html;
+inputFilesfunc.css = css;
+inputFilesfunc.html = html;
 
-$.comp("input", inputfunc);
+$.comp("inputFiles", inputFilesfunc);
+

@@ -1,5 +1,4 @@
-import {$} from "../tie.js";
-import {colors} from "./colors.js"
+
 const css = `
 	.Button
 	{
@@ -22,29 +21,44 @@ const css = `
 		user-select: none;
 	}
 
-
+	.ButtonInactive
+	{
+		margin: 0 0.5mm 0.5mm 0;
+		border-width: 0.7mm;
+		border-style: solid;
+		padding: 0.5mm;
+		border-radius: 2mm;
+		box-shadow: 0 0 3mm;
+		user-select: none;
+		background-color: ${colors.compbackground};
+		display: inline-block;
+		text-shadow: 1px 1px 1px #000;
+	}
 
 `;
 
 const html = `
-<span class="Button" tie = "color:style.borderColor, color:style.color"   tieattributes="style:style" tieevents="onclick:onclick" tieinner>
+<span tieclass="class" tie = "color:style.borderColor, color:style.color"   tieattributes="style:style" tieevents="onclick:onclick" tieinner>
 </span>
 `;
 
 
 function button()
 {
+	
+	var colorBacker = colors.default;
 	var at = 
 	{
 		attributes:
 		{
 			get color()
 			{
-				return at.color;
+				return colorBacker;
 			},
 			set color(v)
 			{
-				at.color = colors[v];
+				colorBacker = colors[v];
+				if(at.attributes.enabled) at.color = colorBacker;
 				
 			},
 			get class()
@@ -66,12 +80,31 @@ function button()
 				at.color = color;
 				at.bordercolor = color;
 			},
+			get enabled()
+			{
+				return at.class == "Button";
+			},
+			set enabled(v)
+			{
+				if(v == 1)
+				{
+					at.class = "Button";
+					at.color = colorBacker;
+				}
+				else
+				{
+					at.color = colors.default;
+					at.class = "ButtonInactive";
+				}
+			},
 			onclick: undefined
 		},
 		color: colors.default,
 		style: "",
+		class: "Button",
 		onclick(e)
 		{
+			if(!at.attributes.enabled) return;
 			if(at.attributes.onclick) at.attributes.onclick(e);
 		}
 		

@@ -77,3 +77,76 @@ export function animate(obj)
 	}
 	
 }
+globalThis.animate = animate;
+
+
+
+ /*
+{
+	duration:...,
+	callback:...,
+	timeleft:...,
+	timelaps:...
+}
+ */
+
+var listtime = [];
+var startedtime = false;
+var time1time;
+var time2time;
+
+
+
+
+function doAnimtime()
+{
+	time2time = Date.now();
+	var laps = time2time - time1time;
+	time1time = time2time;
+	
+	listtime.forEach((item)=>
+	{
+		item.timelaps = laps;
+		item.callback(item);
+		
+		
+	});
+	listtime = listtime.filter((item)=>
+	{
+		if(item.timeleft <=0) return false;
+		item.timeleft -= laps;
+		
+		if(item.timeleft < 0) item.timeleft = 0;
+		return true;
+		
+	});
+	
+	
+	if(listtime.length > 0)setTimeout(doAnimtime, 0);
+	else startedtime = false;
+}
+
+
+/*
+example input
+{
+	duration:...
+	callback:...
+	
+	
+}
+*/
+
+export function animateTime(obj)
+{
+	obj.timeleft = obj.duration;
+	listtime.push(obj);
+	if(!startedtime)
+	{
+		startedtime = true;
+		time1tie = Date.now();
+		setTimeout(doAnimtime, 0);
+	}
+	
+}
+globalThis.animateTime = animateTime;

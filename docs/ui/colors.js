@@ -1,4 +1,3 @@
-import {$} from "../tie.js";
 
 const black = "#000";
 const gray1 = "#333";
@@ -37,4 +36,4 @@ export const colors =
 	notice: blue
 	
 };
-
+globalThis.colors = colors;

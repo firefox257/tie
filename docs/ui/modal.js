@@ -1,5 +1,3 @@
-import {$} from "../tie.js";
-import {colors} from "./colors.js"
 
 const css = `
 
@@ -79,6 +77,7 @@ function modalfunc()
 		},
 		display: "block", 
 		color: colors.info
+		
 	};
 	return at;
 }

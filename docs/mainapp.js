@@ -1,10 +1,5 @@
-//const global = (0,eval)("this");
-import {$} from "./tie.js";
 import {} from "./ui/ui.js";
 import {colors} from "./ui/colors.js";
-
-
-
 
 const css = `
 body
@@ -114,7 +109,7 @@ const html = `
 <br />
 <comp tietype="input" type="text" color="ok"></comp><br/><br/>
 
-<comp tietype="padlock" width="5mm" height="5mm" color="notice" blur="1.3" ></comp><br/><br/>
+<comp tietype="padlock" width="10mm" height="10mm" color="info" blur="1.3" ></comp><br/><br/>
 
 </div>
 

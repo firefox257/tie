@@ -1,5 +1,3 @@
-import {$} from "../tie.js";
-import {colors} from "./colors.js"
 
 const css = `
 .toggleOuter

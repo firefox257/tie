@@ -35,7 +35,8 @@ block
 
 const html = `
 <div class ="full">
-	<comp tietype="loadFileModal" show ="1"></cmop>
+	<comp tietype="loadFileModal" show ="1"></comp>
+	<comp tietype="svgEditPage"></comp>
 </div>
 `;
 

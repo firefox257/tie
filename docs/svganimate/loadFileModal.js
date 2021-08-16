@@ -41,8 +41,8 @@ var at =
 	filechange(files)
 	{
 		
-		console.log("at files");
-		console.log(at.files);
+		//console.log("at files");
+		//console.log(at.files);
 		if(files && files.length >=1)
 		{
 			at.enabled = 1;
@@ -53,7 +53,12 @@ var at =
 	enabled: 0,
 	okevent()
 	{
-		console.log("clicked");
+		//console.log("clicked");
+		
+		readTextFile(at.files[0], function(txt)
+		{
+			$.msgc.send("set svg text", txt);
+		});
 		at.show = 0;
 	}
 };

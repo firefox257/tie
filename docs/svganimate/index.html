@@ -8,7 +8,7 @@
 	<doc tietype="mainappsvg"></doc>
 	<script type="module">
 		
-		import {} from "../services/fileService.js";
+		/*import {} from "../services/fileService.js";
 		import {} from "../tie.js";
 		import {} from "../animate.js";
 		import {} from "./globals.js";
@@ -18,9 +18,51 @@
 
 		import {} from "./mainappsvg.js";
 		$.doc();
+		*/
 		
 		
-		
+	</script>
+	<script type="module">
+	import "../tie.js";
+	
+	
+	$.lazyload("./try1.js", "try1");
+	
+	await $.import("try1", o=>
+	{
+		o.trythis();
+	});
+	console.log(hi);
+	//console.log($);
+	//globalThis.this1 = "asdfasdf";
+	
+	/*
+	var body = $.q("body");
+	var script = document.createElement("script");
+	$.attr(script, "type", "module");
+	script.textContent = `
+	
+	
+	globalThis.hi="hi there";
+	console.log(this1);
+	
+	`;
+	document.body.appendChild(script);
+	console.log(hi);*/
+	
+	
+	var i = 0;
+	function changethis(ref)
+	{
+		ref.i = 123;
+	}
+	
+	var v = { i: i};
+	
+	changethis(v);
+	console.log("i");
+	console.log(i);
+	console.log(this);
 	</script>
 
 </body>

@@ -74,6 +74,14 @@ export var $msgc = {
 
 export function $fastpath(obj, p, v)
 {
+	if(!p)
+	{
+		console.log("no path");
+		console.log(obj)
+		console.log(p);
+		return undefined;
+	}
+	
 	if(!obj) return;
 	if(v===undefined)
 	{
@@ -101,6 +109,83 @@ export function $fastpath(obj, p, v)
 	}
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//============================================
+
+
+var exportimport = {};
+var exportitems;
+export async function $import(name, callback)
+{
+	var r = exportimport[name];
+	if(!r.isloaded)
+	{
+		exportitems  = r.items;
+		var response = await fetch(r.resource);
+		var txt = await response.text();
+		
+		var body = $.q("body");
+		var script = document.createElement("script");
+		$.attr(script, "type", "module");
+		script.textContent = txt;
+		document.body.appendChild(script);
+		r.isloaded = true;
+		
+		if(callback) callback(exportitems);
+		exportitems = undefined;
+		return  r.items;
+	}
+	if(callback) callback(exportitems);
+	
+	exportitems = undefined;
+	return r.items;
+}
+
+export function $export(name, item)
+{
+	exportitems[name] = item;
+}
+
+export function $lazyload(resource, name)
+{
+	exportimport[name] = {resource: resource, items:{}, isloaded: false};
+}
+
+export async function $load(resource, name)
+{
+	var r = {resource: resource, items:{}, isloaded: false};
+	exportimport[name] = r;
+	
+	exportitems  = r.items;
+	
+	var response = await fetch(r.resource);
+	var txt = await response.text();
+	
+	var body = $.q("body");
+	var script = document.createElement("script");
+	$.attr(script, "type", "module");
+	script.textContent = txt;
+	document.body.appendChild(script);
+	r.isloaded = true;
+	
+	exportitems = undefined;
+}
+
+
+
 //=======================
 var __comps = {};
 
@@ -127,9 +212,6 @@ export function $comp(name, o)
 
 function createGetSet(o, path1, getfunc, setfunc)
 {
-	
-	
-	
 	var att = path1.split(".");
 	if(att.length <=1)
 	{
@@ -154,9 +236,6 @@ function createGetSet(o, path1, getfunc, setfunc)
 }
 function createGet(o, path1, getfunc)
 {
-	
-	
-	
 	var att = path1.split(".");
 	if(att.length <=1)
 	{
@@ -285,8 +364,20 @@ function addCompAttributesSetTracker(po, o, path1, path2)
 	$fastpath(po.tracker, path1).push(function(v)
 	{
 		//potential @obj
-		var v1 = $fastpath(o, path2);
-		if(v != v1) $fastpath(o, path2, v);
+		
+		var v1 = $fastpath(o.attributes, path2);
+		if(v != v1) $fastpath(o.attributes, path2, v);
+	});
+}
+
+function addCompTieSetTracker(po, o, path1, path2)
+{
+	$fastpath(po.tracker, path1).push(function(v)
+	{
+		//potential @obj
+		
+		var v1 = $fastpath(o.attributes, path2);
+		if(v != v1) $fastpath(o.attributes, path2, v);
 	});
 }
 
@@ -330,9 +421,50 @@ function setCompAttributesBackerTracker(objscaf, parentobjscaf)
 			//create get set
 			createTieGetSet(po, tieattributes[i][0]);
 		}
-		//if found then only add a tracker
-		$fastpath(o, tieattributes[i][1], $fastpath(po, "backerfields." + tieattributes[i][0]) );
+		//if not found then only add a tracker
+		$fastpath(o.attributes, tieattributes[i][1], $fastpath(po, "backerfields." + tieattributes[i][0]) );
 		addCompAttributesSetTracker(po, o, tieattributes[i][0], tieattributes[i][1]); 
+		
+	}
+}
+
+function setCompTieBackerTracker(objscaf, parentobjscaf)
+{
+	var tie = objscaf.tie;
+	var o = objscaf.obj;
+	var po = parentobjscaf.obj;
+	//see if exists first
+	for(var i = 0; i < tie.length; i++)
+	{
+		if(!($fastpath(po, "backerfields." + tie[i][0])) )
+		{
+			if($fastpath(po, tie[i][0])) 
+			{
+				$fastpath(po, "backerfields." + tie[i][0],$fastpath(po, tie[i][0]));
+			}
+			else $fastpath(po, "backerfields." + tie[i][0], null);
+			
+			$fastpath(po, "tracker." + tie[i][0], []);
+			
+			//create get set
+			createTieGetSet(po, tie[i][0]);
+		}
+		//if not found then only add a tracker
+		$fastpath(o.attributes, tie[i][1], $fastpath(po, "backerfields." + tie[i][0]) );
+		addCompTieSetTracker(po, o, tie[i][0], tie[i][1]); 
+		
+	}
+}
+
+function setCompTieReadBackerTracker(objscaf, parentobjscaf)
+{
+	var tieread = objscaf.tieread;
+	var o = objscaf.obj;
+	var po = parentobjscaf.obj;
+	//see if exists first
+	for(var i = 0; i < tieread.length; i++)
+	{
+		createCompTieReadGet(po, o, tieread[i][0], tieread[i][1]);
 	}
 }
 
@@ -350,6 +482,29 @@ function setCompToParentCompTies(objscaf, parentobjscaf)
 		}
 		setCompAttributesBackerTracker(objscaf, parentobjscaf);
 		
+	}
+	if(objscaf.tie)
+	{
+		if(!parentobjscaf)
+		{
+			console.log("No parent object to tie ");
+			console.log(dom);
+			console.trace();
+			return;
+		}
+		setCompTieBackerTracker(objscaf, parentobjscaf);
+		
+	}
+	if(objscaf.tieread)
+	{
+		if(!parentobjscaf)
+		{
+			console.log("No parent object to tieread ");
+			console.log(dom);
+			console.trace();
+			return;
+		}
+		setCompTieReadBackerTracker(objscaf, parentobjscaf);
 	}
 	if(objscaf.tieevents)
 	{
@@ -484,11 +639,19 @@ function setTieEvents(scaf, objscaf, domscaf)
 
 function createTieReadGet(o, dom, path1, path2)
 {
-	
 	createGet(o, path1,
 	function()
 	{
 		return $fastpath(dom, path2);
+	});
+}
+
+function createCompTieReadGet(po, o, path1, path2)
+{
+	createGet(po, path1,
+	function()
+	{
+		return $fastpath(o.attributes, path2);
 	});
 }
 
@@ -819,8 +982,6 @@ function parseTempDom(scaf, objscaf)
 		}
 	}
 	
-
-	
 }
 
 function parseComp(scaf, dom, parentobjscaf)
@@ -866,16 +1027,13 @@ function parseComp(scaf, dom, parentobjscaf)
 	remakeDom(objscaf);
 	parseTempDom(scaf, objscaf);
 	
-	
 	// set attributes on obj attributes
 	setCompDomAttributes(scaf, dom, objscaf);
 	
 	//set all ties from parent comps. 
 	setCompToParentCompTies(objscaf, parentobjscaf);
 	
-	
 	//todo set tempdom as dom.
-	
 	//replace dom
 	var atdom = objscaf.tempdom.firstChild;
 	atdom.parentobj = objscaf.obj;
@@ -997,6 +1155,9 @@ export function $appendcss(strcss)
 	document.head.insertAdjacentHTML("beforeend", `<style>${strcss}</style>`);
 }
 
+
+
+
 export var $ = {
 	global: $global,
 	q: $q,
@@ -1012,8 +1173,10 @@ export var $ = {
 	appendComp: $appendComp,
 	append: $append,
 	removeComp: $removeComp,
-	appendcss: $appendcss
+	appendcss: $appendcss,
+	import: $import,
+	export: $export,
+	lazyload: $lazyload
 };
 
-
-
+globalThis.$ = $;

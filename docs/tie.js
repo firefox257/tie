@@ -109,6 +109,83 @@ export function $fastpath(obj, p, v)
 	}
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//============================================
+
+
+var exportimport = {};
+var exportitems;
+export async function $import(name, callback)
+{
+	var r = exportimport[name];
+	if(!r.isloaded)
+	{
+		exportitems  = r.items;
+		var response = await fetch(r.resource);
+		var txt = await response.text();
+		
+		var body = $.q("body");
+		var script = document.createElement("script");
+		$.attr(script, "type", "module");
+		script.textContent = txt;
+		document.body.appendChild(script);
+		r.isloaded = true;
+		
+		if(callback) callback(exportitems);
+		exportitems = undefined;
+		return  r.items;
+	}
+	if(callback) callback(exportitems);
+	
+	exportitems = undefined;
+	return r.items;
+}
+
+export function $export(name, item)
+{
+	exportitems[name] = item;
+}
+
+export function $lazyload(resource, name)
+{
+	exportimport[name] = {resource: resource, items:{}, isloaded: false};
+}
+
+export async function $load(resource, name)
+{
+	var r = {resource: resource, items:{}, isloaded: false};
+	exportimport[name] = r;
+	
+	exportitems  = r.items;
+	
+	var response = await fetch(r.resource);
+	var txt = await response.text();
+	
+	var body = $.q("body");
+	var script = document.createElement("script");
+	$.attr(script, "type", "module");
+	script.textContent = txt;
+	document.body.appendChild(script);
+	r.isloaded = true;
+	
+	exportitems = undefined;
+}
+
+
+
 //=======================
 var __comps = {};
 
@@ -1078,6 +1155,9 @@ export function $appendcss(strcss)
 	document.head.insertAdjacentHTML("beforeend", `<style>${strcss}</style>`);
 }
 
+
+
+
 export var $ = {
 	global: $global,
 	q: $q,
@@ -1093,7 +1173,10 @@ export var $ = {
 	appendComp: $appendComp,
 	append: $append,
 	removeComp: $removeComp,
-	appendcss: $appendcss
+	appendcss: $appendcss,
+	import: $import,
+	export: $export,
+	lazyload: $lazyload
 };
 
 globalThis.$ = $;

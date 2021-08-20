@@ -53,7 +53,10 @@ const html = `
 				<comp tietype="menupage" group = "mainmenu" id = "about" title="About" show = "1" >
 					<span class = "title">Tie Lib</span> <br/>
 					<comp tietype = "frame" color="ok">
-						A minimal library for simple components. 
+						A minimal library for simple components.asdf <br/>
+					</comp><br/><br/>
+					<comp tietype="frame" color="error">
+						Still being worked on.
 					</comp>
 				</comp>
 				<comp tietype="menupage" group = "mainmenu" id = "goal" title="Goals">

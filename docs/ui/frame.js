@@ -2,10 +2,6 @@
 const css = `
 .frame
 {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
 	display: inline-block;
 	margin: 0;
 	padding: 2mm;
@@ -29,7 +25,14 @@ function frame()
 	{
 		attributes:
 		{
-			
+			get color()
+			{
+				return at.color;
+			},
+			set color(v)
+			{
+				at.color = colors[v];
+			}
 		},
 		color: colors.info,
 	};
@@ -39,4 +42,4 @@ frame.css = css;
 frame.html = html;
 
 
-$.comp("fame", frame);
+$.comp("frame", frame);

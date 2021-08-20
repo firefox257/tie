@@ -1013,7 +1013,7 @@ function parseComp(scaf, dom, parentobjscaf)
 	if(!objscaf.objfunc)
 	{
 		
-		console.log(`Comp ${tietype} has no comp function init defined. `);
+		console.log(`Comp "${tietype}" has no comp function init defined. `);
 		console.log(objscaf.objfunc);
 		console.log(dom);
 		console.trace();

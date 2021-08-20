@@ -31,14 +31,12 @@ body
 		background-color: rgba(0, 0, 0, 0);
 	}
 	
-	.main
-	{
-		color: ${colors.info};
-		text-shadow: 0 0 2mm ${colors.info};
-	}	
+	
 	.title
 	{
-		font-size: 12mm
+		color: ${colors.info};
+		text-shadow: 0 0 4mm ${colors.info};
+		font-size: 16mm
 	}	
 	
 `;
@@ -54,7 +52,9 @@ const html = `
 			<td width = "100%" align = "middle" class = "main">
 				<comp tietype="menupage" group = "mainmenu" id = "about" title="About" show = "1" >
 					<span class = "title">Tie Lib</span> <br/>
-					A minimal library for simple components. 
+					<comp tietype = "frame" color="ok">
+						A minimal library for simple components. 
+					</comp>
 				</comp>
 				<comp tietype="menupage" group = "mainmenu" id = "goal" title="Goals">
 					<comp tietype="GoalsPage"></comp>

@@ -10,7 +10,10 @@ const html = `
 <span class="title">
 Goals
 </span><br/>
-The goals
+
+<span class = "modalframe">
+	The goals
+</span>
 
 </div>
 

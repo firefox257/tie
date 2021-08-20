@@ -2,7 +2,7 @@
 const css = `
 body
 	{
-		font-size: 4mm;
+		font-size: 5mm;
 		background-color: ${colors.background};
 		color: ${colors.default};
 		mix-blend-mode1: lighten;
@@ -38,7 +38,7 @@ body
 	}	
 	.title
 	{
-		font-size: 10mm
+		font-size: 12mm
 	}	
 	
 `;

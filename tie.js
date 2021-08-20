@@ -72,6 +72,20 @@ export var $msgc = {
 };
 
 
+export function $syncfetchtext(url)
+{
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", url, false);
+
+	// If specified, responseType must be empty string or "text"
+	//xhr.responseType = 'text';
+	xhr.send(null);
+	if(xhr.status ===200)
+	{
+		return xhr.responseText;
+	}
+}
+
 export function $fastpath(obj, p, v)
 {
 	if(!p)
@@ -109,33 +123,24 @@ export function $fastpath(obj, p, v)
 	}
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //============================================
 
 
 var exportimport = {};
 var exportitems;
-export async function $import(name, callback)
+export function $import(name, callback)
 {
 	var r = exportimport[name];
+	if(!r)
+	{
+		console.log(`No import defined for ${name}.`);
+		console.trace();
+	}
 	if(!r.isloaded)
 	{
 		exportitems  = r.items;
-		var response = await fetch(r.resource);
-		var txt = await response.text();
+		
+		var txt = $syncfetchtext(r.resource);
 		
 		var body = $.q("body");
 		var script = document.createElement("script");
@@ -164,19 +169,20 @@ export function $lazyload(resource, name)
 	exportimport[name] = {resource: resource, items:{}, isloaded: false};
 }
 
-export async function $load(resource, name)
+export function $load(resource, name)
 {
 	var r = {resource: resource, items:{}, isloaded: false};
 	exportimport[name] = r;
 	
 	exportitems  = r.items;
 	
-	var response = await fetch(r.resource);
-	var txt = await response.text();
+	//var response = await fetch(r.resource);
+	var txt = $syncfetchtext(r.resource); //await response.text();
 	
 	var body = $.q("body");
 	var script = document.createElement("script");
 	$.attr(script, "type", "module");
+	//console.log(txt);
 	script.textContent = txt;
 	document.body.appendChild(script);
 	r.isloaded = true;
@@ -203,6 +209,10 @@ export function $comp(name, o)
 	}
 	else
 	{
+		if(!__comps[name])
+		{
+			$import(name);
+		}
 		return __comps[name];
 	}
 };
@@ -995,10 +1005,19 @@ function parseComp(scaf, dom, parentobjscaf)
 		console.trace();
 		return;
 	}
+	
 	var objscaf = {};
 	objscaf.dom = dom;
 	
 	objscaf.objfunc =  $comp(tietype);
+	if(!objscaf.objfunc)
+	{
+		
+		console.log(`Comp ${tietype} has no comp function init defined. `);
+		console.log(objscaf.objfunc);
+		console.log(dom);
+		console.trace();
+	}
 	objscaf.obj = objscaf.objfunc();
 	if(!objscaf.obj.attributes) objscaf.obj.attributes={};
 	//objscaf.dom.parentobj = objscaf.obj;
@@ -1122,7 +1141,7 @@ export function $append(o, dom, compstr)
 	while(temp.childNodes.length >0)
 	{
 		var v1 = temp.childNodes[0];
-		dom.appendChild(v1);
+		dom.before(v1);
 	}
 	
 	for(var i = 0; i < scaf.listOfObjs.length; i++)
@@ -1176,7 +1195,9 @@ export var $ = {
 	appendcss: $appendcss,
 	import: $import,
 	export: $export,
-	lazyload: $lazyload
+	lazyload: $lazyload,
+	load: $load,
+	syncfetchtext: $syncfetchtext
 };
 
 globalThis.$ = $;

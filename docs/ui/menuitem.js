@@ -34,8 +34,6 @@ const css = `
 const html = `
 <span class = "menuitem" tieinner tieevents="onclick:onclick" tieattributes="selected:selected">
 </span>
-	
-
 `;
 
 

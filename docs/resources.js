@@ -15,6 +15,7 @@ $.lazyload("./ui/padlock.js", "padlock");
 $.lazyload("./ui/menuitem.js", "menuitem");
 $.lazyload("./ui/menupage.js", "menupage");
 $.lazyload("./ui/menugroup.js", "menugroup");
+$.lazyload("./ui/frame.js", "frame");
 
 //load pages. 
 $.lazyload("./mainapp.js", "mainapp");

@@ -1128,22 +1128,22 @@ export function $append(o, dom, compstr)
 	var scaf = {};
 	scaf.listOfObjs = [];
 	var temp = document.createElement("div");
+	var domdom = document.createElement("div");
 	temp.innerHTML = compstr;
 	var objscaf = {
 		obj: o,
 		tempdom: temp,
-		dom: dom
+		dom: domdom
 	};
 	
 	parseTempDom(scaf, objscaf);
 	
-	
 	while(temp.childNodes.length >0)
 	{
 		var v1 = temp.childNodes[0];
-		dom.before(v1);
+		dom.appendChild(v1);
 	}
-	
+
 	for(var i = 0; i < scaf.listOfObjs.length; i++)
 	{
 		 var o = scaf.listOfObjs[i];

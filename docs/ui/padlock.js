@@ -237,7 +237,7 @@ function padlockfunc()
 		},
 		init()
 		{
-			console.log(at);
+			//console.log(at);
 			//at.atdom.transform.animVal[0].setRotate(
 			//at.atdom.setAttribute("transform", "translate(8.4, 15) rotate(360)");
 			//at.animate.transform = at.animate.unlock;

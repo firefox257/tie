@@ -61,6 +61,7 @@ http.createServer(function(req, res)
 	
 	if(url.endsWith("/"))url+="index.html";
 	url=url.substring(1, url.length);
+	if(fs.statSync(url).isDirectory()) url +="/index.html";
 	
 	fs.stat(url, function(err, stat)
 	{

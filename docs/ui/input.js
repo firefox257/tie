@@ -50,18 +50,12 @@ function inputfunc()
 			},
 			set type(v)
 			{
-				console.log("set type" );
-				console.log(v);
 				at.type = v;
 			}
 			
 		},
 		color: colors.default,
 		type: "text",
-		init()
-		{
-			console.log("textbox init");
-		}
 	};
 	
 	return at;

@@ -23,7 +23,6 @@ function toggleOnOffValue()
 			},
 			set state(v)
 			{
-				
 				at.toggle.state = v;
 			},
 			get value()
@@ -57,10 +56,6 @@ function toggleOnOffValue()
 		onchange(v)
 		{
 			if(at.attributes.onchange)at.attributes.onchange({value:at.value, state: at.toggle.state});
-		},
-		init()
-		{
-			
 		}
 		
 	};

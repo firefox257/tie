@@ -9,13 +9,22 @@
 	<script type="module">
 		//const global = (0,eval)("this");
 		import  "./tie.js";
-		$.load("./resources.js", "resources");
+		import "./animate.js";
+		$.load("./ui/ui.js", "ui");
+		$.lazyload("./mainapp.js", "mainapp");
 		$.doc();
 
-	
+		
+			var w1 = new Worker("./try1.js");
+			var w2 = new Worker("./try1.js");
+			w1.postMessage({time:10000000, msg:"here1"});
+			w2.postMessage({time:10000, msg:"here2"});
 		
 		
 		
+		
+	</script>
+	<script>
 	</script>
 
 </body>

@@ -1,10 +1,15 @@
 
-var i1 = 123;
-
-globalThis.hi = "asdfasdfsdf";
-
-$.export("trythis", function()
+onmessage = function(e)
 {
-	console.log("done!!!!");
-});
 
+	var b = 1;
+	for(var i =0; i < e.data.time; i++)
+	{
+		b = (b + 1 * 20) %123;
+	}
+
+
+	console.log(e.data.msg);
+
+
+}

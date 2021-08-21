@@ -50,8 +50,8 @@ const html = `
 				</comp>
 			</td>
 		</tr>
-		<tr>
-			<td width = "100%" align = "middle" class = "main">
+		<tr height="100%">
+			<td align = "middle" class = "main">
 				<comp tietype="menupage" group = "mainmenu" id = "about" title="About" show = "1" >
 					<span class = "title">Tie Lib</span> <br/>
 					<comp tietype = "frame" color="ok">

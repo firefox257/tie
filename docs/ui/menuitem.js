@@ -19,16 +19,6 @@ const css = `
 	box-shadow-bottom: 0 0 1mm  -2mm ${colors.info};
 }
 
-.menuitem:hover
-{
-	display: inline-block;
-	white-space: nowrap;
-
-	color: ${colors.yellow};
-	text-shadow: 0 0 1mm ${colors.yellow};
-	border-bottom: 0.5mm solid ${colors.yellow};
-	box-shadow-bottom: 0 0 1mm  -2mm ${colors.yellow};
-}
 
 `;
 const html = `

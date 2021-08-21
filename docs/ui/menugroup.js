@@ -34,7 +34,7 @@ function menugroup()
 					
 					<comp tietype="menuitem" group="${menu.group}" id ="${menu.id}" selected = "${selected}">
 						${menu.title}
-					</comp> <br/>
+					</comp>
 					`);
 				}
 			});

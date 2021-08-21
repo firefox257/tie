@@ -5,7 +5,7 @@ const css = `
 `;
 const html = `
 
-<div style="padding:20mm";>
+<div style="padding:5mm";>
 
 <span class="title" style="padding:10mm;">
 Goals

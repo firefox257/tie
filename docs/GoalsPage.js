@@ -33,7 +33,6 @@ Goals
 
 `;
 
-
 function GoalsPage()
 {
 	var at = 

@@ -61,6 +61,12 @@ http.createServer(function(req, res)
 	
 	if(url.endsWith("/"))url+="index.html";
 	url=url.substring(1, url.length);
+	if(!fs.existsSync(url))
+	{
+		write(req, res, 404, url + " Not Found!");
+		return;
+	}
+	
 	if(fs.statSync(url).isDirectory()) url +="/index.html";
 	
 	fs.stat(url, function(err, stat)

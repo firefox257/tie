@@ -45,7 +45,7 @@ const html = `
 <div>
 	<table cellspacing = "0" cellpadding = "0" class = "full">
 		<tr>
-			<td style="padding: 2mm;">
+			<td style="padding: 2mm;" valign="top">
 				<comp tietype="menugroup" group="mainmenu">
 				</comp>
 			</td>
@@ -53,7 +53,7 @@ const html = `
 				<comp tietype="menupage" group = "mainmenu" id = "about" title="About" show = "1" >
 					<span class = "title">Tie Lib</span> <br/>
 					<comp tietype = "frame" color="ok">
-						A minimal library for simple components.asdf <br/>
+						A minimal library for simple components. <br/>
 					</comp><br/><br/>
 					<comp tietype="frame" color="error">
 						Still being worked on.

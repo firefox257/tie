@@ -290,12 +290,6 @@ globalThis.$ = $;
 			
 			var txt = $.syncfetchtext(r.resource);
 			
-			//var body = $.q("body");
-			//var script = document.createElement("script");
-			//$.attr(script, "type", "module");
-			//script.textContent = txt;
-			//document.body.appendChild(script);
-			
 			$.boxeval(txt);
 			
 			r.isloaded = true;
@@ -321,6 +315,7 @@ globalThis.$ = $;
 	//export 
 	function $lazyload(resource, name)
 	{
+		
 		exportimport[name] = {resource: resource, items:{}, isloaded: false};
 	}
 	$.lazyload = $lazyload;
@@ -329,19 +324,15 @@ globalThis.$ = $;
 	function $load(resource, name)
 	{
 		var r = {resource: resource, items:{}, isloaded: false};
+		
 		exportimport[name] = r;
 		
 		exportitems  = r.items;
 		
 		//var response = await fetch(r.resource);
-		var txt = $.syncfetchtext(r.resource); //await response.text();
+		var txt = $.syncfetchtext(r.resource); //await response.text();		
 		
-		var body = $.q("body");
-		var script = document.createElement("script");
-		$.attr(script, "type", "module");
-		//console.log(txt);
-		script.textContent = txt;
-		document.body.appendChild(script);
+		$.boxeval(txt);
 		r.isloaded = true;
 		
 		exportitems = undefined;

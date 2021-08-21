@@ -11,7 +11,8 @@ const yellow = "#ff0";
 const green = "#8f0";
 const blue = "#6af";
 
-export const colors = 
+//export 
+const colors = 
 {
 	
 	black: black,

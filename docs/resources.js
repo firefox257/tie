@@ -20,3 +20,4 @@ $.lazyload("./ui/frame.js", "frame");
 //load pages. 
 $.lazyload("./mainapp.js", "mainapp");
 $.lazyload("./GoalsPage.js", "GoalsPage");
+

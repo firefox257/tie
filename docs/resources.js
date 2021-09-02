@@ -1,6 +1,5 @@
 
 //load components.
-
 $.load("./ui/colors.js", "colors");
 $.lazyload("./ui/button.js", "button");
 $.lazyload( "./ui/toggleOnOff.js", "toggleOnOff");
@@ -19,5 +18,7 @@ $.lazyload("./ui/frame.js", "frame");
 
 //load pages. 
 $.lazyload("./mainapp.js", "mainapp");
+$.lazyload("./AboutPage.js", "AboutPage");
 $.lazyload("./GoalsPage.js", "GoalsPage");
+$.lazyload("./Documentation.js", "Documentation");
 

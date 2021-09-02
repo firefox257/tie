@@ -53,16 +53,13 @@ const html = `
 		<tr height="100%">
 			<td align = "middle" class = "main">
 				<comp tietype="menupage" group = "mainmenu" id = "about" title="About" show = "1" >
-					<span class = "title">Tie Lib</span> <br/>
-					<comp tietype = "frame" color="ok">
-						A minimal library for simple components. <br/>
-					</comp><br/><br/>
-					<comp tietype="frame" color="error">
-						Still being worked on.
-					</comp>
+					<comp tietype="AboutPage"></comp>
 				</comp>
 				<comp tietype="menupage" group = "mainmenu" id = "goal" title="Goals">
 					<comp tietype="GoalsPage"></comp>
+				</comp>
+				<comp tietype="menupage" group = "mainmenu" id = "doc" title = "Getting started">
+					<comp tietype="Documentation"></comp>
 				</comp>
 			</td>
 		</tr>

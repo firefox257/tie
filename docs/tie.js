@@ -230,10 +230,7 @@ globalThis.$ = $;
 	}
 	
 	$.obj2str = $obj2str;
-})();
-
-(function()
-{
+	
 	function $str2obj(_____str)
 	{
 		try
@@ -276,6 +273,9 @@ globalThis.$ = $;
 	var exportimport = {};
 	var exportitems;
 	//export 
+	$.importbase = "";
+	$.importlazybase = "";
+	
 	function $import(name, callback)
 	{
 		var r = exportimport[name];
@@ -288,7 +288,7 @@ globalThis.$ = $;
 		{
 			exportitems  = r.items;
 			
-			var txt = $.syncfetchtext(r.resource);
+			var txt = $.syncfetchtext($.importbase + r.resource);
 			
 			$.boxeval(txt);
 			
@@ -316,7 +316,7 @@ globalThis.$ = $;
 	function $lazyload(resource, name)
 	{
 		
-		exportimport[name] = {resource: resource, items:{}, isloaded: false};
+		exportimport[name] = {resource: $.importlazybase + resource, items:{}, isloaded: false};
 	}
 	$.lazyload = $lazyload;
 
@@ -330,7 +330,7 @@ globalThis.$ = $;
 		exportitems  = r.items;
 		
 		//var response = await fetch(r.resource);
-		var txt = $.syncfetchtext(r.resource); //await response.text();		
+		var txt = $.syncfetchtext($.importbase + r.resource); //await response.text();		
 		
 		$.boxeval(txt);
 		r.isloaded = true;
@@ -390,7 +390,7 @@ globalThis.$ = $;
 		{
 			var atend = att.pop();
 			var pathp = att.join(".");
-			Object.defineProperty($fastpath(o, pathp), atend, 
+			Object.defineProperty($.fastpath(o, pathp), atend, 
 			{
 				get:getfunc,
 				set:setfunc
@@ -413,7 +413,7 @@ globalThis.$ = $;
 		{
 			var atend = att.pop();
 			var pathp = att.join(".");
-			Object.defineProperty($fastpath(o, pathp), atend, 
+			Object.defineProperty($.fastpath(o, pathp), atend, 
 			{
 				get:getfunc
 			});
@@ -528,7 +528,6 @@ globalThis.$ = $;
 		$.fastpath(po.tracker, path1).push(function(v)
 		{
 			//potential @obj
-			
 			var v1 = $.fastpath(o.attributes, path2);
 			if(v != v1) $.fastpath(o.attributes, path2, v);
 		});
@@ -539,7 +538,6 @@ globalThis.$ = $;
 		$.fastpath(po.tracker, path1).push(function(v)
 		{
 			//potential @obj
-			
 			var v1 = $.fastpath(o.attributes, path2);
 			if(v != v1) $.fastpath(o.attributes, path2, v);
 		});
@@ -576,7 +574,7 @@ globalThis.$ = $;
 			{
 				if($.fastpath(po, tieattributes[i][0])) 
 				{
-					$.fastpath(po, "backerfields." + tieattributes[i][0],$fastpath(po, tieattributes[i][0]));
+					$.fastpath(po, "backerfields." + tieattributes[i][0],$.fastpath(po, tieattributes[i][0]));
 				}
 				else $.fastpath(po, "backerfields." + tieattributes[i][0], null);
 				
@@ -684,7 +682,7 @@ globalThis.$ = $;
 			var tieevents = objscaf.tieevents;
 			for(var i = 0; i < tieevents.length; i++)
 			{
-				$fastpath(o.attributes, tieevents[i][1],  $fastpath(po, tieevents[i][0]));
+				$.fastpath(o.attributes, tieevents[i][1],  $.fastpath(po, tieevents[i][0]));
 			}
 		}
 		if(objscaf.tieobj)
@@ -696,7 +694,7 @@ globalThis.$ = $;
 				console.trace();
 				return;
 			}
-			$fastpath(parentobjscaf.obj, objscaf.tieobj, objscaf.obj.attributes);
+			$.fastpath(parentobjscaf.obj, objscaf.tieobj, objscaf.obj.attributes);
 		}
 	}
 
@@ -806,7 +804,7 @@ globalThis.$ = $;
 		createGet(o, path1,
 		function()
 		{
-			return $fastpath(dom, path2);
+			return $.fastpath(dom, path2);
 		});
 	}
 
@@ -815,7 +813,7 @@ globalThis.$ = $;
 		createGet(po, path1,
 		function()
 		{
-			return $fastpath(o.attributes, path2);
+			return $.fastpath(o.attributes, path2);
 		});
 	}
 
@@ -982,7 +980,7 @@ globalThis.$ = $;
 					var v2 = $.fastpath(dom, tie[i][1]);
 					if(v1 != v2)
 					{
-						$fastpath(o, tie[i][0], v2);
+						$.fastpath(o, tie[i][0], v2);
 					}
 				}
 			}
@@ -1142,10 +1140,34 @@ globalThis.$ = $;
 			if(strcode != "")
 			{
 				eval(`code = ${strcode};`);
-				$fastpath(o, path, code);
+				$.fastpath(o, path, code);
 			}
 		}
 		
+		//todo move to after all comps compiled.
+		$.qa("*[tieglobal]", objscaf.tempdom).forEach((tdom)=>
+		{
+			//console.log("at here1");
+			var global = $.attr(tdom, "tieglobal");
+			$.tieglobal[global] = tdom;
+		});
+		
+		$.qa("*[tietoglobal]", objscaf.tempdom).forEach((tdom)=>
+		{
+			//console.log("at here2");
+			var global = $.attr(tdom, "tietoglobal");
+			var todom = $.tieglobal[global];
+			if(!todom)
+			{
+				//console.log(`No tieglobal defined for ${global}`);
+				//console.log(tdom);
+				//console.trace();
+			}
+			else
+			{
+				todom.appendChild(tdom);
+			}
+		});
 	}
 
 	function parseComp(scaf, dom, parentobjscaf)
@@ -1300,6 +1322,8 @@ globalThis.$ = $;
 		document.head.insertAdjacentHTML("beforeend", `<style>${strcss}</style>`);
 	}
 	$.appendcss = $appendcss;
+	
+	$.tieglobal = {};
 })();
 
 

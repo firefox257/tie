@@ -261,7 +261,11 @@ globalThis.$ = $;
 		}
 		catch(e)
 		{
-			console.log(e);
+			//console.log(e.message);
+            var err = e.constructor("Error in evaled script: " + e.message);
+            console.log(e.message);
+            var lineNumber = e.lineNumber;
+            console.log("line number: " + lineNumber);
 		}
 	}
 	$.boxeval = $boxeval;
@@ -355,7 +359,9 @@ globalThis.$ = $;
 			{
 				if(o.css)
 				{
-					document.head.insertAdjacentHTML("beforeend", `<style>${o.css}</style>`);
+                    var css = o.css.trim();
+                    if(css != "")
+                        document.head.insertAdjacentHTML("beforeend", `<style>${o.css}</style>`);
 				}
 				__comps[name] = o;
 				
@@ -1144,30 +1150,6 @@ globalThis.$ = $;
 			}
 		}
 		
-		//todo move to after all comps compiled.
-		$.qa("*[tieglobal]", objscaf.tempdom).forEach((tdom)=>
-		{
-			//console.log("at here1");
-			var global = $.attr(tdom, "tieglobal");
-			$.tieglobal[global] = tdom;
-		});
-		
-		$.qa("*[tietoglobal]", objscaf.tempdom).forEach((tdom)=>
-		{
-			//console.log("at here2");
-			var global = $.attr(tdom, "tietoglobal");
-			var todom = $.tieglobal[global];
-			if(!todom)
-			{
-				//console.log(`No tieglobal defined for ${global}`);
-				//console.log(tdom);
-				//console.trace();
-			}
-			else
-			{
-				todom.appendChild(tdom);
-			}
-		});
 	}
 
 	function parseComp(scaf, dom, parentobjscaf)
@@ -1228,12 +1210,49 @@ globalThis.$ = $;
 		//set all ties from parent comps. 
 		setCompToParentCompTies(objscaf, parentobjscaf);
 		
+		
+		//todo move to after all comps compiled.
+		$.qa("*[tieglobal]", objscaf.tempdom).forEach((tdom)=>
+		{
+			//console.log("at here1");
+			var global = $.attr(tdom, "tieglobal");
+			$.tieglobal[global] = tdom;
+		});
+		
+		$.qa("*[tietoglobal]", objscaf.tempdom).forEach((tdom)=>
+		{
+			//console.log("at here2");
+			var global = $.attr(tdom, "tietoglobal");
+			var todom = $.tieglobal[global];
+			if(!todom)
+			{
+				//console.log(`No tieglobal defined for ${global}`);
+				//console.log(tdom);
+				//console.trace();
+			}
+			else
+			{
+				todom.appendChild(tdom);
+			}
+		});
+		
 		//todo set tempdom as dom.
 		//replace dom
+        /*
 		var atdom = objscaf.tempdom.firstChild;
 		atdom.parentobj = objscaf.obj;
-		dom.replaceWith(atdom);
 		
+        
+        dom.replaceWith(atdom);*/
+        
+        while(objscaf.tempdom.childNodes.length >0)
+		{
+			var v1 = objscaf.tempdom.childNodes[0];
+			//dom.appendChild(v1);
+            v1.parentobj = objscaf.obj;
+            dom.parentNode.insertBefore(v1, dom);
+		}
+		dom.remove();
 		
 	}
 
@@ -1316,12 +1335,12 @@ globalThis.$ = $;
 	$.removecomp = $removecomp;
 
 	//export 
-	function $appendcss(strcss)
+	function $appendCss(strcss)
 	{
 		
 		document.head.insertAdjacentHTML("beforeend", `<style>${strcss}</style>`);
 	}
-	$.appendcss = $appendcss;
+	$.appendCss = $appendCss;
 	
 	$.tieglobal = {};
 })();

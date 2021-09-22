@@ -39,9 +39,12 @@ class var
 	operator uint16_t();
 	operator int32_t();
 	operator uint32_t();
+	operator int64_t();
+	operator uint64_t();
 	operator float();
 	operator double();
 	operator string();
+	operator var();
 	//equals
 	var & operator = (bool d);
 	var & operator = (int8_t d);
@@ -373,8 +376,13 @@ class var
 	var(function<var(var, var, var, var, var, var, var, var, var)> func);
 	var(function<var(var, var, var, var, var, var, var, var, var, var)> func);
 	var operator()(var a1, var a2, var a3, var a4, var a5, var a6, var a7, var a8, var a9, var a10);
-
 	//endfunction
+	//getter setter
+	var & g(function<var()> func);
+	var & s(function<void(var)> func);
+	var & gs(function<var()> funcg, function<void(var)> funcs);
+	//end getter setter
+
 	friend ostream & operator << (ostream & out, var v)
 	{
 		cout << (*(v.ref->d));
@@ -400,6 +408,7 @@ class var
 #include "VarList.hpp"
 #include "VarMap.hpp"
 #include "VarFunction.hpp"
+#include "VarGetSet.hpp"
 
 
 #endif

@@ -22,8 +22,6 @@ class VarType
 		List,
 		Map,
 		Function,
-		Get, 
-		Set,
 		GetSet
 	};
 };

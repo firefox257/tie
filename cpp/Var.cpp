@@ -19,7 +19,7 @@
 #include "VarList.cpp"
 #include "VarMap.cpp"
 #include "VarFunction.cpp"
-
+#include "VarGetSet.cpp"
 
 
 void var::Reset()
@@ -118,52 +118,82 @@ var::var(string d)
 }
 var::operator bool()
 {
+	if(ref->d->Type() == VarType::GetSet) return (bool)ref->d->g();
 	return (bool)(*ref->d);
 }
 var::operator int8_t()
 {
+	if(ref->d->Type() == VarType::GetSet) return (int8_t)ref->d->g();
 	return (int8_t)(*ref->d);
 }
 var::operator char()
 {
+	if(ref->d->Type() == VarType::GetSet) return (char)ref->d->g();
 	return (int8_t)(*ref->d);
 }
 var::operator uint8_t()
 {
+	if(ref->d->Type() == VarType::GetSet) return (uint8_t)ref->d->g();
 	return (uint8_t)(*ref->d);
 }
 var::operator int16_t()
 {
+	if(ref->d->Type() == VarType::GetSet) return (int16_t)ref->d->g();
 	return (int16_t)(*ref->d);
 }
 var::operator uint16_t()
 {
+	if(ref->d->Type() == VarType::GetSet) return (uint8_t)ref->d->g();
 	return (uint16_t)(*ref->d);
 }
 var::operator int32_t()
 {
+	if(ref->d->Type() == VarType::GetSet) return (int32_t)ref->d->g();
 	return (int32_t)(*ref->d);
 }
 var::operator uint32_t()
 {
+	if(ref->d->Type() == VarType::GetSet) return (uint32_t)ref->d->g();
+	return (uint32_t)(*ref->d);
+}
+var::operator int64_t()
+{
+	if(ref->d->Type() == VarType::GetSet) return (int64_t)ref->d->g();
+	return (int32_t)(*ref->d);
+}
+var::operator uint64_t()
+{
+	if(ref->d->Type() == VarType::GetSet) return (uint64_t)ref->d->g();
 	return (uint32_t)(*ref->d);
 }
 var::operator float()
-{
+{if(ref->d->Type() == VarType::GetSet) return (float)ref->d->g();
 	return (float)(*ref->d);
 }
 var::operator double()
 {
+	if(ref->d->Type() == VarType::GetSet) return (double)ref->d->g();
 	return (double)(*ref->d);
 }
 var::operator string()
 {
+	if(ref->d->Type() == VarType::GetSet) return (string)ref->d->g();
 	return (string)(*ref->d);
+}
+var::operator var()
+{
+	if(ref->d->Type() == VarType::GetSet) return ref->d->g();
+	return (*this);
 }
 
 //equals
 var & var::operator = (bool d)
 {
+	if(ref->d->Type() == VarType::GetSet)
+	{
+		ref->d->s(d);
+		return (*this);
+	}
 	Reset();
 	ref->d = new VarBool(d);
 	ref->count = 1;
@@ -171,6 +201,11 @@ var & var::operator = (bool d)
 }
 var & var::operator = (int8_t d)
 {
+	if(ref->d->Type() == VarType::GetSet)
+	{
+		ref->d->s(d);
+		return (*this);
+	}
 	Reset();
 	ref->d = new VarInt8(d);
 	ref->count = 1;
@@ -178,6 +213,11 @@ var & var::operator = (int8_t d)
 }
 var & var::operator = (uint8_t d)
 {
+	if(ref->d->Type() == VarType::GetSet)
+	{
+		ref->d->s(d);
+		return (*this);
+	}
 	Reset();
 	ref->d = new VarUint8(d);
 	ref->count = 1;
@@ -185,6 +225,11 @@ var & var::operator = (uint8_t d)
 }
 var & var::operator = (int16_t d)
 {
+	if(ref->d->Type() == VarType::GetSet)
+	{
+		ref->d->s(d);
+		return (*this);
+	}
 	Reset();
 	ref->d = new VarInt16(d);
 	ref->count = 1;
@@ -192,6 +237,11 @@ var & var::operator = (int16_t d)
 }
 var & var::operator = (uint16_t d)
 {
+	if(ref->d->Type() == VarType::GetSet)
+	{
+		ref->d->s(d);
+		return (*this);
+	}
 	Reset();
 	ref->d = new VarUint16(d);
 	ref->count = 1;
@@ -199,6 +249,11 @@ var & var::operator = (uint16_t d)
 }
 var & var::operator = (int32_t d)
 {
+	if(ref->d->Type() == VarType::GetSet)
+	{
+		ref->d->s(d);
+		return (*this);
+	}
 	Reset();
 	ref->d = new VarInt32(d);
 	ref->count = 1;
@@ -206,6 +261,11 @@ var & var::operator = (int32_t d)
 }
 var & var::operator = (uint32_t d)
 {
+	if(ref->d->Type() == VarType::GetSet)
+	{
+		ref->d->s(d);
+		return (*this);
+	}
 	Reset();
 	ref->d = new VarUint32(d);
 	ref->count = 1;
@@ -213,6 +273,11 @@ var & var::operator = (uint32_t d)
 }
 var & var::operator = (int64_t d)
 {
+	if(ref->d->Type() == VarType::GetSet)
+	{
+		ref->d->s(d);
+		return (*this);
+	}
 	Reset();
 	ref->d = new VarInt64(d);
 	ref->count = 1;
@@ -220,6 +285,12 @@ var & var::operator = (int64_t d)
 }
 var & var::operator = (uint64_t d)
 {
+	if(ref->d->Type() == VarType::GetSet)
+	{
+
+		ref->d->s(d);
+		return (*this);
+	}
 	Reset();
 	ref->d = new VarUint64(d);
 	ref->count = 1;
@@ -227,6 +298,11 @@ var & var::operator = (uint64_t d)
 }
 var & var::operator = (float d)
 {
+	if(ref->d->Type() == VarType::GetSet)
+	{
+		ref->d->s(d);
+		return (*this);
+	}
 	Reset();
 	ref->d = new VarFloat(d);
 	ref->count = 1;
@@ -234,6 +310,11 @@ var & var::operator = (float d)
 }
 var & var::operator = (double d)
 {
+	if(ref->d->Type() == VarType::GetSet)
+	{
+		ref->d->s(d);
+		return (*this);
+	}
 	Reset();
 	ref->d = new VarDouble(d);
 	ref->count = 1;
@@ -241,6 +322,11 @@ var & var::operator = (double d)
 }
 var & var::operator = (const char * d)
 {
+	if(ref->d->Type() == VarType::GetSet)
+	{
+		ref->d->s(d);
+		return (*this);
+	}
 	Reset();
 	ref->d = new VarString(d);
 	ref->count = 1;
@@ -248,6 +334,11 @@ var & var::operator = (const char * d)
 }
 var & var::operator = (string d)
 {
+	if(ref->d->Type() == VarType::GetSet)
+	{
+		ref->d->s(d);
+		return (*this);
+	}
 	Reset();
 	ref->d = new VarString(d);
 	ref->count = 1;
@@ -255,10 +346,15 @@ var & var::operator = (string d)
 }
 var & var::operator = (var v)
 {
-
+	if(ref->d->Type() == VarType::GetSet)
+	{
+		ref->d->s(v);
+		return (*this);
+	}
 	if(v.ref->d->Type() == VarType::Function ||
 	v.ref->d->Type() == VarType::List ||
-	v.ref->d->Type() == VarType::Map)
+	v.ref->d->Type() == VarType::Map ||
+	v.ref->d->Type() == VarType::GetSet)
 	{
 		ref = v.ref;
 		ref->count++;
@@ -2877,7 +2973,44 @@ var var::operator()(var a1 = var(), var a2 = var(), var a3 = var(), var a4 = var
 }
 
 //endfunction
+//getter setter
+var & var::g(function<var()> func)
+{
+	if(ref->d->Type() != VarType::GetSet)
+	{
+		Reset();
+		ref->d = new VarGetSet();
+		ref->count = 1;
 
+	}
+	ref->d->g(func);
+	return (*this);
+}
+var & var::s(function<void(var)> func)
+{
+	if(ref->d->Type() != VarType::GetSet)
+	{
+		Reset();
+		ref->d = new VarGetSet();
+		ref->count = 1;
+
+	}
+	ref->d->s(func);
+	return (*this);
+}
+var & var::gs(function<var()> funcg, function<void(var)> funcs)
+{
+	if(ref->d->Type() != VarType::GetSet)
+	{
+		Reset();
+		ref->d = new VarGetSet();
+		ref->count = 1;
+		cout << "Here12" el;
+	}
+	ref->d->gs(funcg, funcs);
+	return (*this);
+}
+//end getter setter
 
 
 

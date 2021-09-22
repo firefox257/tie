@@ -1096,6 +1096,29 @@ var BASE::f(var * args, int count)
 	return var();
 }
 //end function
+//getter setter
+void BASE::g(function<var()> func)
+{
+	ThrowNotImplemented(__FILE__, __LINE__);
+}
+void BASE::s(function<void(var)> func)
+{
+	ThrowNotImplemented(__FILE__, __LINE__);
+}
+void BASE::gs(function<var()> funcg, function<void(var)> funcs)
+{
+	ThrowNotImplemented(__FILE__, __LINE__);
+}
+var BASE::g()
+{
+	ThrowNotImplemented(__FILE__, __LINE__);
+	return var();
+}
+void BASE::s(var)
+{
+	ThrowNotImplemented(__FILE__, __LINE__);
+}
+//end getter setter
 
 void BASE::outstream(ostream & out)
 {

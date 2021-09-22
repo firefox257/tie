@@ -19,12 +19,23 @@ int main()
 	try
 	{
 		var v;
-		v = varfunc(var)
-		{
-			cout << "here1" el;
-			return "hi rthe";
-		};
-		cout << v() el;
+		v.m("bla", var()
+			.gs(
+				varfunc(var)
+				{
+					cout << "getting" el;
+					return 123;
+				},
+				varfunc(void, var v)
+				{
+					cout << "setting " << v el;
+				}
+			)
+		);
+
+		v["bla"] = 125;
+		var vv = v["bla"];
+		cout << vv el;
 	}
 	catch(Exception ex)
 	{

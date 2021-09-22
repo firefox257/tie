@@ -332,6 +332,13 @@ class BASE
 	virtual void f(function<var(var, var, var, var, var, var, var, var, var, var)> func);
 	virtual var f(var*, int count );
 	//end function
+	//getter setter
+	virtual void g(function<var()> func);
+	virtual void s(function<void(var)> func);
+	virtual void gs(function<var()> funcg, function<void(var)> funcs);
+	virtual var g();
+	virtual void s(var);
+	//end getter setter
 
 	virtual void outstream(ostream & out);
 

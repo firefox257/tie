@@ -189,6 +189,11 @@ var::operator var()
 //equals
 var & var::operator = (VarType::Types t)
 {
+	if(ref->d->Type() == VarType::GetSet)
+	{
+		ref->d->s(var());
+		return (*this);
+	}
 	Reset();
 	ref->d = new VarUndefined;
 	ref->count = 1;
@@ -3012,9 +3017,15 @@ var & var::gs(function<var()> funcg, function<void(var)> funcs)
 		Reset();
 		ref->d = new VarGetSet();
 		ref->count = 1;
-		cout << "Here12" el;
 	}
 	ref->d->gs(funcg, funcs);
+	return (*this);
+}
+var & var::gsRemove()
+{
+	Reset();
+	ref->d = new VarUndefined;
+	ref->count = 1;
 	return (*this);
 }
 //end getter setter

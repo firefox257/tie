@@ -382,6 +382,7 @@ class var
 	var & g(function<var()> func);
 	var & s(function<void(var)> func);
 	var & gs(function<var()> funcg, function<void(var)> funcs);
+	var & gsRemove();
 	//end getter setter
 
 	friend ostream & operator << (ostream & out, var v)

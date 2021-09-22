@@ -12,7 +12,7 @@ using namespace std;
 #include "Var.cpp"
 
 
-#define varfunc(R, ...) (function<R(__VA_ARGS__)>)[&](__VA_ARGS__)->R
+
 
 int main()
 {
@@ -37,7 +37,7 @@ int main()
 		var vv = v["bla"];
 		cout << vv el;
 
-		v["bla"] = VarType::Undefined;
+		v["bla"].gsRemove();
 		v["bla"] = "hi";
 		cout << v["bla"] el;
 	}

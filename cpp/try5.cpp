@@ -36,6 +36,10 @@ int main()
 		v["bla"] = 125;
 		var vv = v["bla"];
 		cout << vv el;
+
+		v["bla"] = VarType::Undefined;
+		v["bla"] = "hi";
+		cout << v["bla"] el;
 	}
 	catch(Exception ex)
 	{

@@ -46,6 +46,7 @@ class var
 	operator string();
 	operator var();
 	//equals
+	var & operator = (VarType::Types t);
 	var & operator = (bool d);
 	var & operator = (int8_t d);
 	var & operator = (uint8_t d);

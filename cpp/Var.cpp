@@ -187,6 +187,13 @@ var::operator var()
 }
 
 //equals
+var & var::operator = (VarType::Types t)
+{
+	Reset();
+	ref->d = new VarUndefined;
+	ref->count = 1;
+	return (*this);
+}
 var & var::operator = (bool d)
 {
 	if(ref->d->Type() == VarType::GetSet)

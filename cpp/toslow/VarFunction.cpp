@@ -31,7 +31,7 @@ BASE::~BASE()
 {
 	if(funcptr != 0)
 	{
-		delete(funcptr);
+		delete((function<void()>*)funcptr);
 	}
 }
 //function

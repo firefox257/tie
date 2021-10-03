@@ -27,6 +27,13 @@ BASE::BASE()
 {
 
 }
+BASE::~BASE()
+{
+	if(obj != 0)
+	{
+		delete(obj);
+	}
+}
 
 /*
 void BASE::CloneOrMapTo(VarBase * & ptr)

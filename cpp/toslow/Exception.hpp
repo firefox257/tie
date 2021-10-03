@@ -20,7 +20,7 @@ struct Exception
 	}
 	friend ostream & operator << (ostream & out, const Exception ex)
 	{
-		cout << "file: " << ex.FileName << " line: " << ex.LineNumber << " " << ex.Message << "\r\n";
+		cout << ex.FileName << " " << ex.LineNumber << ": " << ex.Message << "\r\n";
 		return out;
 	}
 };

@@ -1,72 +1,20 @@
 #ifndef VARTYPE_HPP
 #define VARTYPE_HPP
 
-
-
-//extended types
-
+/*
 enum class VarType
 {
   Undefined,
   Bool,
-  Char,
-  Int8,
-  Uint8,
-  Int16,
-  Uint16,
-  Int32,
-  Uint32,
   Int64,
-  Uint64,
-  Float,
   Double,
   String,
-	ListBool,
-	ListChar,
-	ListInt8,
-	ListUint8,
-	ListInt16,
-	ListUint16,
-	ListInt32,
-	ListUint32,
-	ListInt64,
-	ListUint64,
-	ListFloat,
-	ListDouble,
-	ListString,
-  ListVar,
-	MapInt64Var,
-	MapDoubleVar,
-	MapStringVar,
-  GetSet,
-  FunctionVoid0,
-	FunctionVoid1,
-	FunctionVoid2,
-	FunctionVoid3,
-	FunctionVoid4,
-	FunctionVoid5,
-	FunctionVoid6,
-	FunctionVoid7,
-	FunctionVoid8,
-	FunctionVoid9,
-	FunctionVoid10,
-	FunctionVar0,
-	FunctionVar1,
-	FunctionVar2,
-	FunctionVar3,
-	FunctionVar4,
-	FunctionVar5,
-	FunctionVar6,
-	FunctionVar7,
-	FunctionVar8,
-	FunctionVar9,
-	FunctionVar10
+  List,
+  Map,
+  Funciton
 };
+*/
 
-
-//end extended types
-
-/*
 enum class VarType
 {
   Undefined,
@@ -133,6 +81,5 @@ const char * VarTypeName(VarType t)
   };
   return "";
 }
-*/
 
 #endif

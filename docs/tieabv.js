@@ -1,3 +1,6 @@
+//$.qa("*[tietype], *[tie], *[tieread], *[tieclass], *[tieevents], *[trackevents], *[tiedom], *[tieradio], *[tieattributes], *[tieobj]", objscaf.tempdom).forEach((tdom)=>
+//$.qa("*[tt], *[t], *[tr], *[tc], *[te], *[tke], *[td], *[tradio], *[ta], *[to]", objscaf.tempdom).forEach((tdom)=>
+
 //const $import = (0,eval)("this");
 var $ = {};
 globalThis.$ = $;
@@ -1144,7 +1147,7 @@ globalThis.$ = $;
 		var tieinnerjson = $.q("*[tij]", tempdom);//tieinnerjson attribute
 		if(tieinnerjson)
 		{
-			var path = $.attr(tieinnerjson, "tieinnerjson");//tieinerjson attribute
+			var path = $.attr(tieinnerjson, "tij");//tieinerjson attribute
 			var code;
 			var strcode = dom.innerHTML.trim();
 			if(strcode != "")

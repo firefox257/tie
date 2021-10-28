@@ -20,6 +20,7 @@ class var
 		void (*clear)(Ref *& ref);
 		void (*addobserver)(Ref *& ref, void * func);
 		int64_t t = 0;
+		string * tname= 0;
 
 	};
 	Ref * ref = 0;
@@ -28,8 +29,10 @@ class var
 	static void screate(Ref * & ref)
 	{
 		static int64_t stype = typeid(A).hash_code();
+		static string stypename = typeid(A).name();
 		ref->d = new A;
 		ref->t = stype;
+		ref->tname = &stypename;
 		ref->refCount = 1;
 	}
 
@@ -53,6 +56,8 @@ class var
 
 	static void screatenone(Ref * & ref)
 	{
+		static string undefined = "undefined";
+		ref->tname = & undefined;
 	}
 	static void sclearnone(Ref *& ref)
 	{
@@ -106,6 +111,7 @@ class var
 	var(const A & a)
 	{
 		static int64_t stype = typeid(A).hash_code();
+
 		ref = new Ref;
 		ref->create = screate<A>;
 		ref->clear = sclear<A>;
@@ -166,7 +172,15 @@ class var
 		static int64_t stype = typeid(A).hash_code();
 		static int64_t obtype = typeid(Observer<A>).hash_code();
 		static int64_t gstype = typeid(GetSet<A>).hash_code();
-		if(ref->t == obtype)
+
+		if(ref->d == 0)
+		{
+			ref->create = screate<A>;
+			ref->clear = sclear<A>;
+			ref->create(ref);
+			*((A*)ref->d) = a;
+		}
+		else if(ref->t == obtype)
 		{
 			Observer<A> & ob = *(Observer<A>*)ref->d;
 			ob.data = a;
@@ -196,7 +210,15 @@ class var
 		static int64_t stype = typeid(string).hash_code();
 		static int64_t obtype = typeid(Observer<string>).hash_code();
 		static int64_t gstype = typeid(GetSet<string>).hash_code();
-		if(ref->t == obtype)
+
+		if(ref->d == 0)
+		{
+			ref->create = screate<string>;
+			ref->clear = sclear<string>;
+			ref->create(ref);
+			*((string*)ref->d) = a;
+		}
+		else if(ref->t == obtype)
 		{
 			Observer<string> & ob = *(Observer<string>*)ref->d;
 			ob.data = a;
@@ -258,6 +280,10 @@ class var
 			return func(args...);
 		}
 	}
+	string typeName()
+	{
+		return *ref->tname;
+	}
 	//list or vecotrs
 	var & operator[](int k)
 	{
@@ -296,7 +322,8 @@ class var
 };
 
 #define varfunc(R, ...) (function<R(__VA_ARGS__)>)[&](__VA_ARGS__)->R
-
+#define umap unordered_map
+#define obvar(T, V)  var::Observer<string>("relative")
 
 class Dom
 {
@@ -339,8 +366,8 @@ class Dom
 int main()
 {
 
-	Dom d = Dom()("position", "absolute");
-	//d["position"] = "relative";
+	var v1 = "asdf";
+	cout << v1.typeName() el;
 
 
 	return 0;

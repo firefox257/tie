@@ -363,12 +363,53 @@ class Dom
 	}
 
 };
+
+class msgc
+{
+	struct node
+	{
+		int64_t t;
+		void * v;
+	};
+	static umap<string, umap<uint64_t, node> > funclist;
+	public:
+	template<typename ... ARGS>
+	static void subscribe(string path, function<void(ARGS...)> func)
+	{
+		static int64_t stype = typeid(function<void(ARGS...)>).hash_code();
+
+		node & n = funclist[path][(uint64_t)&func];
+		n.t = stype;
+		n.v = &func;
+	}
+	template<typename ... ARGS>
+	static void send(string path, ARGS ... args)
+	{
+		static int64_t stype = typeid(function<void(ARGS...)>).hash_code();
+		 umap<uint64_t, node> & mm = funclist[path];
+		 for(auto i : mm)
+		 {
+			 	if(i.second.t == stype)
+				{
+				  function<void(ARGS...)> & func = *(function<void(ARGS...)>*)i.second.v;
+					func(args...);
+				}
+		 }
+
+	}
+};
+umap<string, umap<uint64_t, msgc::node> > msgc::funclist;
+
 int main()
 {
 
-	var v1 = "asdf";
-	cout << v1.typeName() el;
+	msgc::subscribe("try1", varfunc(void, int i1, string str1)
+	{
+		cout << "i1: " << i1 el;
+		cout << "str1 " << str1 el;
+	});
 
+	msgc::send("try1", 123, (string)"hiaasdf");
 
 	return 0;
 }

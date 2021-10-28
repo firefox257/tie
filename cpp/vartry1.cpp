@@ -403,7 +403,7 @@ umap<string, umap<uint64_t, msgc::node> > msgc::funclist;
 int main()
 {
 
-	msgc::subscribe("try1", varfunc(void, int i1, string str1)
+	msgc::subscribe("try1", varfunc(void, int i1,  string str1)
 	{
 		cout << "i1: " << i1 el;
 		cout << "str1 " << str1 el;
@@ -411,5 +411,26 @@ int main()
 
 	msgc::send("try1", 123, (string)"hiaasdf");
 
+	var v1 = (umap<string, var>)
+	{
+		{"title", obvar(string, "asdf")},
+		{"w", 123.0},
+		{"children", (vector<var>)
+			{123, "asdff", 3433, 3333}
+		},
+		{"init", varfunc(void)
+			{
+				cout << "init" el;
+			}
+		}
+	};
+
+	cout << (string&)v1["children"][1] el;
+	cout << v1["children"].typeName() el;
+	v1["title"].subscribe(varfunc(void, string v)
+	{
+		cout << "tilte has changed to: " << v el;
+	});
+	v1["title"] = "asdfffffffff";
 	return 0;
 }

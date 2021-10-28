@@ -298,32 +298,50 @@ class var
 #define varfunc(R, ...) (function<R(__VA_ARGS__)>)[&](__VA_ARGS__)->R
 
 
-class try1
+class Dom
 {
 	public:
-	var args = (map<string, var>)
+	var dom = (unordered_map<string, var>)
 	{
-		{"title", var::Observer<string>("title")},
-		{"init", varfunc(void)
-			{
-				cout << "init" el;
-			}
-		}
+		{"attr", unordered_map<string, var>()},
+		{"position", var::Observer<string>("relative")},
+		{"top", var::Observer<int>(0)},
+		{"left", var::Observer<int>(0)}
 	};
 
-	try1()
+	Dom()
 	{
-		args["title"].subscribe(varfunc(void, string  v)
+		dom["position"].subscribe(varfunc(void, string v)
 		{
-			cout << "title has changed" el;
+			cout << "position has changed" el;
 		});
+	}
+
+	var & operator[](string k)
+	{
+		return dom[k];
+	}
+
+	template<typename A>
+	Dom & operator()(string k, const A & v)
+	{
+		dom[k] = v;
+		return *this;
+	}
+
+	Dom & operator()(string k, const char * v)
+	{
+		dom[k] = v;
+		return *this;
 	}
 
 };
 int main()
 {
-	try1 t1;
-	t1.args["init"].call<void>();
+
+	Dom d = Dom()("position", "absolute");
+	//d["position"] = "relative";
+
 
 	return 0;
 }

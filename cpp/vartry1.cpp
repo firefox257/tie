@@ -400,6 +400,34 @@ class msgc
 };
 umap<string, umap<uint64_t, msgc::node> > msgc::funclist;
 
+
+/*
+This question is old, but with C++11 we got a new way to check for a functions existence (or existence of any non-type member, really), relying on SFINAE again:
+
+template<class T>
+auto serialize_imp(std::ostream& os, T const& obj, int)
+    -> decltype(os << obj, void())
+{
+  os << obj;
+}
+
+template<class T>
+auto serialize_imp(std::ostream& os, T const& obj, long)
+    -> decltype(obj.stream(os), void())
+{
+  obj.stream(os);
+}
+
+template<class T>
+auto serialize(std::ostream& os, T const& obj)
+    -> decltype(serialize_imp(os, obj, 0), void())
+{
+  serialize_imp(os, obj, 0);
+}
+
+Now onto some explanations. First thing, I use expression SFINAE to exclude the serialize(_imp) functions from overload resolution, if the first expression inside decltype isn't valid (aka, the function doesn't exist).
+*/
+
 int main()
 {
 
@@ -432,5 +460,6 @@ int main()
 		cout << "tilte has changed to: " << v el;
 	});
 	v1["title"] = "asdfffffffff";
+
 	return 0;
 }

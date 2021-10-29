@@ -9,6 +9,72 @@
 using namespace std;
 #define el << "\r\n"
 
+template<typename A, typename B>
+ostream & operator << (ostream & os, unordered_map<A, B> m)
+{
+	static string sname = typeid(unordered_map<A, B>).name();
+
+	cout << "{";
+	for(auto i: m)
+	{
+		cout << "{\"" << i.first << "\"," << i.second << "},";
+
+	}
+	cout << "}";
+	//cout << sname;
+	return os;
+}
+
+template<typename A, typename B>
+ostream & operator << (ostream & os, map<A, B> m)
+{
+	static string sname = typeid(map<A, B>).name();
+	cout << "{";
+	for(auto i: m)
+	{
+		cout << "{\"" << i.first << "\"," << i.second << "},";
+
+	}
+	cout << "}";
+	//cout << sname;
+	return os;
+}
+
+template<typename A>
+ostream & operator << (ostream & os, vector<A> l)
+{
+	static string sname = typeid(vector<A>).name();
+	cout << "{";
+	for(auto i: l)
+	{
+		cout << i << ",";
+	}
+	cout << "}";
+	return os;
+}
+
+template<typename A>
+ostream & operator << (ostream & os, list<A> l)
+{
+	static string sname = typeid(list<A>).name();
+	cout << "{";
+	for(auto i: l)
+	{
+		cout << i << ",";
+	}
+	cout << "}";
+	return os;
+}
+
+template<typename R, typename ... ARGS>
+ostream & operator << (ostream & os, function<R(ARGS...)> func)
+{
+	static string sname = typeid(function<R(ARGS...)>).name();
+	cout << sname;
+	return os;
+}
+
+
 class var
 {
 	class Ref
@@ -19,6 +85,7 @@ class var
 		void (*create)(Ref *& ref);
 		void (*clear)(Ref *& ref);
 		void (*addobserver)(Ref *& ref, void * func);
+		void (*print)(ostream & os, Ref *& ref);
 		int64_t t = 0;
 		string * tname= 0;
 
@@ -54,6 +121,12 @@ class var
 		}
 	}
 
+	template<typename A>
+	static void sprint(ostream & os, Ref *& ref)
+	{
+		os << *(A*)ref->d;
+	}
+
 	static void screatenone(Ref * & ref)
 	{
 		static string undefined = "undefined";
@@ -61,6 +134,11 @@ class var
 	}
 	static void sclearnone(Ref *& ref)
 	{
+	}
+
+	static void sprintnone(ostream & os, Ref * & ref)
+	{
+		os << "undefined";
 	}
 
 	public:
@@ -105,6 +183,7 @@ class var
 		ref = new Ref();
 		ref->create = screatenone;
 		ref->clear = sclearnone;
+		ref->print = sprintnone;
 	}
 
 	template<typename A>
@@ -115,6 +194,7 @@ class var
 		ref = new Ref;
 		ref->create = screate<A>;
 		ref->clear = sclear<A>;
+		ref->print = sprint<A>;
 		ref->create(ref);
 		*((A*)ref->d) = a;
 	}
@@ -125,6 +205,7 @@ class var
 		ref = new Ref;
 		ref->create = screate<string>;
 		ref->clear = sclear<string>;
+		ref->print = sprint<string>;
 		ref->create(ref);
 		*((string*)ref->d) = a;
 	}
@@ -177,6 +258,7 @@ class var
 		{
 			ref->create = screate<A>;
 			ref->clear = sclear<A>;
+			ref->print = sprint<A>;
 			ref->create(ref);
 			*((A*)ref->d) = a;
 		}
@@ -215,6 +297,7 @@ class var
 		{
 			ref->create = screate<string>;
 			ref->clear = sclear<string>;
+			ref->print = sprint<string>;
 			ref->create(ref);
 			*((string*)ref->d) = a;
 		}
@@ -318,12 +401,24 @@ class var
 		return um[k];
 	}
 
-
+	friend ostream & operator << (ostream & os, var v)
+	{
+		v.ref->print(os, v.ref);
+		return os;
+	}
 };
+
+
+
 
 #define varfunc(R, ...) (function<R(__VA_ARGS__)>)[&](__VA_ARGS__)->R
 #define umap unordered_map
 #define obvar(T, V)  var::Observer<string>("relative")
+
+
+
+
+
 
 class Dom
 {
@@ -400,66 +495,11 @@ class msgc
 };
 umap<string, umap<uint64_t, msgc::node> > msgc::funclist;
 
-
-/*
-This question is old, but with C++11 we got a new way to check for a functions existence (or existence of any non-type member, really), relying on SFINAE again:
-
-template<class T>
-auto serialize_imp(std::ostream& os, T const& obj, int)
-    -> decltype(os << obj, void())
-{
-  os << obj;
-}
-
-template<class T>
-auto serialize_imp(std::ostream& os, T const& obj, long)
-    -> decltype(obj.stream(os), void())
-{
-  obj.stream(os);
-}
-
-template<class T>
-auto serialize(std::ostream& os, T const& obj)
-    -> decltype(serialize_imp(os, obj, 0), void())
-{
-  serialize_imp(os, obj, 0);
-}
-
-Now onto some explanations. First thing, I use expression SFINAE to exclude the serialize(_imp) functions from overload resolution, if the first expression inside decltype isn't valid (aka, the function doesn't exist).
-*/
-
 int main()
 {
 
-	msgc::subscribe("try1", varfunc(void, int i1,  string str1)
-	{
-		cout << "i1: " << i1 el;
-		cout << "str1 " << str1 el;
-	});
-
-	msgc::send("try1", 123, (string)"hiaasdf");
-
-	var v1 = (umap<string, var>)
-	{
-		{"title", obvar(string, "asdf")},
-		{"w", 123.0},
-		{"children", (vector<var>)
-			{123, "asdff", 3433, 3333}
-		},
-		{"init", varfunc(void)
-			{
-				cout << "init" el;
-			}
-		}
-	};
-
-	cout << (string&)v1["children"][1] el;
-	cout << v1["children"].typeName() el;
-	v1["title"].subscribe(varfunc(void, string v)
-	{
-		cout << "tilte has changed to: " << v el;
-	});
-	v1["title"] = "asdfffffffff";
+	var v1 = (vector<var>){123, "hasdf", 3333};
+	cout << v1 el;
 
 	return 0;
 }

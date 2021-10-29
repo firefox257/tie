@@ -20,7 +20,7 @@ ostream & operator << (ostream & os, unordered_map<A, B> m)
 		cout << "{\"" << i.first << "\"," << i.second << "},";
 
 	}
-	cout << "}";
+	cout << "},";
 	//cout << sname;
 	return os;
 }
@@ -498,7 +498,15 @@ umap<string, umap<uint64_t, msgc::node> > msgc::funclist;
 int main()
 {
 
-	var v1 = (vector<var>){123, "hasdf", 3333};
+	var v1 = (umap<string, var>)
+	{
+		{"title", "title"},
+		{"init", varfunc(void)
+			{
+
+			}
+		}
+	};
 	cout << v1 el;
 
 	return 0;

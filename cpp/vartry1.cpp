@@ -408,9 +408,6 @@ class var
 	}
 };
 
-
-
-
 #define varfunc(R, ...) (function<R(__VA_ARGS__)>)[&](__VA_ARGS__)->R
 #define umap unordered_map
 #define obvar(T, V)  var::Observer<string>("relative")
@@ -469,7 +466,7 @@ class msgc
 	static umap<string, umap<uint64_t, node> > funclist;
 	public:
 	template<typename ... ARGS>
-	static void subscribe(string path, function<void(ARGS...)> func)
+	static void handle(string path, function<void(ARGS...)> func)
 	{
 		static int64_t stype = typeid(function<void(ARGS...)>).hash_code();
 

@@ -11,18 +11,49 @@
 using namespace std;
 #define el << "\r\n"
 
+class var;
+vector<string> split (string s, string delimiter)
+{
+    size_t pos_start = 0, pos_end, delim_len = delimiter.length();
+    string token;
+    vector<string> res;
+    while ((pos_end = s.find (delimiter, pos_start)) != string::npos)
+		{
+        token = s.substr (pos_start, pos_end - pos_start);
+        pos_start = pos_end + delim_len;
+        res.push_back (token);
+    }
+
+    res.push_back (s.substr (pos_start));
+    return res;
+}
+bool isInt(const string & str)
+{
+	int s = str.length();
+	for( int i = 0; i < s; i++)
+	{
+		char c = str[i];
+		if(c < '0'|| c >'9') return false;
+	}
+
+	return true;
+}
+
 template<typename A, typename B>
 ostream & operator << (ostream & os, unordered_map<A, B> m)
 {
-	static string sname = typeid(unordered_map<A, B>).name();
 
-	cout << "{";
+
+	static string sname = typeid(unordered_map<A, B>).name();
+	static string vname = typeid(unordered_map<string, var>).name();
+	if(vname == sname) os << "(umap){";
+	else os << "(" << sname << "){";
 	for(auto i: m)
 	{
-		cout << "{\"" << i.first << "\"," << i.second << "},";
+		os << "{\"" << i.first << "\"," << i.second << "},";
 
 	}
-	cout << "},";
+	os << "},";
 	//cout << sname;
 	return os;
 }
@@ -31,27 +62,37 @@ template<typename A, typename B>
 ostream & operator << (ostream & os, map<A, B> m)
 {
 	static string sname = typeid(map<A, B>).name();
-	cout << "{";
+	static string vname = typeid(map<string, var>).name();
+
+	if(vname == sname) os << "(map){";
+	else os << "(" << sname << "){";
+
 	for(auto i: m)
 	{
-		cout << "{\"" << i.first << "\"," << i.second << "},";
+		os << "{\"" << i.first << "\"," << i.second << "},";
 
 	}
-	cout << "}";
+	os << "},";
 	//cout << sname;
 	return os;
 }
+
+
 
 template<typename A>
 ostream & operator << (ostream & os, vector<A> l)
 {
 	static string sname = typeid(vector<A>).name();
-	cout << "{";
+	static string vname = typeid(vector<var>).name();
+
+	if(vname == sname) os << "(vectorvar){";
+	else os << "(" << sname << "){";
+
 	for(auto i: l)
 	{
-		cout << i << ",";
+		os << i << ",";
 	}
-	cout << "}";
+	os << "},";
 	return os;
 }
 
@@ -59,12 +100,15 @@ template<typename A>
 ostream & operator << (ostream & os, list<A> l)
 {
 	static string sname = typeid(list<A>).name();
-	cout << "{";
+	static string vname = typeid(list<var>).name();
+
+	if(vname == sname) os << "(listvar){";
+	else os << "(" << sname << "){";
 	for(auto i: l)
 	{
-		cout << i << ",";
+		os << i << ",";
 	}
-	cout << "}";
+	os << "},";
 	return os;
 }
 
@@ -158,7 +202,11 @@ class var
 			{
 				data = a;
 			}
-
+			friend ostream & operator << (ostream & os, var::Observer<A> ob)
+			{
+				os << ob.data;
+				return os;
+			}
 		};
 
 		template<typename A>
@@ -175,6 +223,11 @@ class var
 			{
 				get = g;
 				set = s;
+			}
+			friend ostream & operator << (ostream & os, var::GetSet<A> gs)
+			{
+				os << gs.get();
+				return os;
 			}
 		};
 
@@ -369,6 +422,11 @@ class var
 	{
 		return *ref->tname;
 	}
+
+  int64_t typeCode()
+  {
+    return ref->t;
+  }
 	//list or vecotrs
 	var & operator[](int k)
 	{
@@ -394,18 +452,282 @@ class var
 		static int64_t mtype = typeid(map<string, var>).hash_code();
 		static int64_t umtype = typeid(unordered_map<string, var>).hash_code();
 		if(ref->t != mtype && ref->t != umtype) throw "not a map<string, var> or a unordered_map<string, var> type.";
+
+
 		if(ref->t == mtype)
 		{
 			map<string, var> & m = *(map<string, var>*)ref->d;
 			return m[k];
 		}
+
 		unordered_map<string, var> & um = *(unordered_map<string, var>*)ref->d;
 		return um[k];
 	}
 
+	template<typename A>
+	bool isType()
+	{
+		static int64_t stype = typeid(A).hash_code();
+		return ref->t == stype;
+	}
+
+
+	var at(string p)
+	{
+		var ptr= (*this);
+
+		auto pp = split(p, ".");
+		int s = pp.size();
+		for(int i = 0; i < s; i++)
+		{
+			if (ptr.isType<map<string, var>>() || ptr.isType<unordered_map<string, var>>())
+			{
+				ptr = ptr[pp[i]];
+			}
+			else if((ptr.isType<vector<var>>() || ptr.isType<list<var>>()) && isInt(pp[i]) )
+			{
+				int index = stoi(pp[i]);
+				ptr = ptr[index];
+			}
+			else
+			{
+				throw "no path";
+			}
+		}
+
+		return ptr;
+	}
+
+  private:
+  void printoutumap(ostream & os, string tabs, unordered_map<string, var> & m)
+  {
+    for(auto i : m)
+    {
+      os << tabs << "{" << "\"" << i.first << "\",";
+      var vv = i.second;
+      if(vv.isType<unordered_map<string, var>>())
+      {
+        os << "(umapvar){\r\n";
+        string tabs1 = tabs + "\t";
+        printoutumap(os, tabs1, vv);
+        os << tabs << "}},\r\n";
+      }
+      else if(vv.isType<map<string, var>>())
+      {
+        os <<  "(mapvar){\r\n";
+        string tabs1 = tabs + "\t";
+        printoutmap(os, tabs1, vv);
+        os << tabs << "}},\r\n";
+      }
+      else if(vv.isType<vector<var>>())
+      {
+        os << "(vectorvar){\r\n";
+        string tabs1 = tabs + "\t";
+        printoutvector(os, tabs1, vv);
+        os << tabs << "}},\r\n";
+      }
+      else if(vv.isType<vector<var>>())
+      {
+        os << "(listvar){\r\n";
+        string tabs1 = tabs + "\t";
+        printoutvector(os, tabs1, vv);
+        os << tabs << "}},\r\n";
+      }
+      else
+      {
+
+        if(vv.isType<string>())
+        {
+
+
+          os<< " \"" << i.second << "\"},\r\n";
+        }
+        else os << " " << i.second << "},\r\n";
+      }
+
+    }
+
+  }
+
+  void printoutmap(ostream & os, string tabs, map<string, var> & m)
+  {
+    for(auto i : m)
+    {
+      os << tabs << "{" << "\"" << i.first << "\",";
+      var vv = i.second;
+      if(vv.isType<unordered_map<string, var>>())
+      {
+        os << "(umapvar){\r\n";
+        string tabs1 = tabs + "\t";
+        printoutumap(os, tabs1, vv);
+        os << tabs << "}},\r\n";
+      }
+      else if(vv.isType<map<string, var>>())
+      {
+        os <<  "(mapvar){\r\n";
+        string tabs1 = tabs + "\t";
+        printoutmap(os, tabs1, vv);
+        os << tabs << "}},\r\n";
+      }
+      else if(vv.isType<vector<var>>())
+      {
+        os << "(vectorvar){\r\n";
+        string tabs1 = tabs + "\t";
+        printoutvector(os, tabs1, vv);
+        os << tabs << "}},\r\n";
+      }
+      else if(vv.isType<list<var>>())
+      {
+        os << "(listvar){\r\n";
+        string tabs1 = tabs + "\t";
+        printoutlist(os, tabs1, vv);
+        os << tabs << "}},\r\n";
+      }
+      else
+      {
+
+        if(vv.isType<string>())
+        {
+
+
+          os<< " \"" << i.second << "\"},\r\n";
+        }
+        else os << " " << i.second << "},\r\n";
+      }
+
+    }
+
+  }
+
+  void printoutvector(ostream & os, string tabs, vector<var> l)
+  {
+
+    for(auto i: l)
+    {
+      if(i.isType<unordered_map<string, var>>())
+      {
+        os << tabs <<  "(umapvar)\r\n";
+        os << tabs << "{\r\n";
+        string tabs1 = tabs + "\t";
+        printoutumap(os, tabs1, i);
+        os << tabs << "},\r\n";
+      }
+      else if(i.isType<map<string, var>>())
+      {
+        os << tabs <<  "(mapvar)\r\n";
+        os << tabs << "{\r\n";
+        string tabs1 = tabs + "\t";
+        printoutmap(os, tabs1, i);
+        os << tabs << "},\r\n";
+      }
+      else if(i.isType<vector<var>>())
+      {
+        os << tabs << "(vectorvar)\r\n";
+        os << tabs << "{\r\n";
+        string tabs1 = tabs + "\t";
+        printoutvector(os, tabs1, i);
+        os << tabs << "},\r\n";
+      }
+      else if(i.isType<list<var>>())
+      {
+        os << tabs << "(listvar)\r\n";
+        os << tabs << "{\r\n";
+        string tabs1 = tabs + "\t";
+        printoutlist(os, tabs1, i);
+        os << tabs << "},\r\n";
+      }
+      else if(i.isType<string>())
+      {
+        os << tabs << "\""<< i << "\",\r\n";
+      }
+      else
+      {
+        os << tabs << i << ",\r\n";
+      }
+    }
+
+  }
+
+  void printoutlist(ostream & os, string tabs, list<var> l)
+  {
+    for(auto i: l)
+    {
+      if(i.isType<unordered_map<string, var>>())
+      {
+        os << tabs << "(umapvar)\r\n";
+        os << tabs << "{\r\n";
+        string tabs1 = tabs + "\t";
+        printoutumap(os, tabs1, i);
+        os << tabs << "},\r\n";
+      }
+      else if(i.isType<map<string, var>>())
+      {
+        os << tabs << "(mapvar)\r\n";
+        os << tabs << "{\r\n";
+        string tabs1 = tabs + "\t";
+        printoutmap(os, tabs1, i);
+        os << tabs << "},\r\n";
+      }
+      else if(i.isType<vector<var>>())
+      {
+        os << tabs << "(vectorvar)\r\n";
+        os << tabs << "{\r\n";
+        string tabs1 = tabs + "\t";
+        printoutvector(os, tabs1, i);
+        os << tabs << "},\r\n";
+      }
+      else if(i.isType<list<var>>())
+      {
+        os << tabs << "(listvar)\r\n";
+        os << tabs << "{\r\n";
+        string tabs1 = tabs + "\t";
+        printoutlist(os, tabs1, i);
+        os << tabs << "},\r\n";
+      }
+      else if(i.isType<string>())
+      {
+        os << tabs << "\""<< i << "\",\r\n";
+      }
+      else
+      {
+        os << tabs << i << ",\r\n";
+      }
+    }
+
+  }
+
+
+  public:
 	friend ostream & operator << (ostream & os, var v)
 	{
-		v.ref->print(os, v.ref);
+    //static int64_t umaptype = typeid(unordered_map<string, var>).hash_code();
+    //static int64_t maptype = typeid(map<string, var>).hash_code();
+    if(v.isType<unordered_map<string, var>>())
+    {
+      os << "(umapvar)\r\n{";
+      string tabs = "\t";
+
+      v.printoutumap(os, tabs, v);
+      os << "}\r\n";
+    }
+    else if(v.isType<map<string, var>>())
+    {
+      os << "(mapvar)\r\n{";
+      string tabs = "\t";
+      v.printoutmap(os, tabs, v);
+      os << "}\r\n";
+    }
+    else if(v.isType<vector<var>>())
+    {
+      os << "(vectorvar)\r\n{";
+      string tabs = "\t";
+      v.printoutvector(os, tabs, v);
+      os << "}\r\n";
+    }
+    else
+    {
+      v.ref->print(os, v.ref);
+    }
 		return os;
 	}
 };
@@ -413,5 +735,16 @@ class var
 #define varfunc(R, ...) (function<R(__VA_ARGS__)>)[&](__VA_ARGS__)->R
 #define umap unordered_map
 #define obvar(T, V)  var::Observer<string>("relative")
+#define gsvar(T, G, S) var::GetSet<T>(\
+	varfunc(T &)\
+	G, \
+	varfunc(void, const T & v)\
+	S\
+);
+#define umapvar umap<string, var>
+#define vectorvar vector<var>
+#define mapvar map<string, var>
+#define listvar list<var>
+
 
 #endif

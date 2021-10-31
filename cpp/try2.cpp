@@ -1,39 +1,56 @@
 #include "var.cpp"
+#include "msgc.cpp"
+#include <regex>
+
+
+var $ = umapvar();
+
+
+class Size
+{
+	double d;
+	public:
+	Size()
+	{
+
+	}
+	Size(double dd)
+	{
+		d = dd;
+	}
+	Size & px(double dd)
+	{
+		d = dd;
+		return *this;
+	}
+	double px()
+	{
+		return d;
+	}
+	friend ostream & operator << (ostream & os, Size s)
+	{
+		cout << "size " << s.d;
+		return os;
+	}
+};
+
+
 
 int main()
 {
-
-
-	var $ = (umap<string,var>){};
-
-	$["comp"] = varfunc(var, string k, var obj)
+	var v1 = (umapvar)
 	{
+		{"title", "window 1"},
+		{"width", Size(123)},
+		{"hegiht", Size(555)},
+		{"init", varfunc(void){
 
+			cout << "init" el;
+		}}
 	};
+	Size & s1 = v1["width"];
 
-
-	var o = varfunc(var)
-	{
-
-		var at = (umap<string, var>)
-		{
-			{"title", "t1"}
-
-		};
-
-		return at;
-	};
-
-
-	var a1 = o.call<var>();
-	var a2 = o.call<var>();
-
-	a1["title"] = "asdfffff";
-	a2["title"] = "hi there";
-
-	cout << a1["title"] el;
-	cout << a2["title"] el;
-
+	cout << v1 el;
 
 	return 0;
 }

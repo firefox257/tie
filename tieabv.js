@@ -1142,6 +1142,8 @@ globalThis.$ = $;
 				var v1 = dom.childNodes[0];
 				tieinner.appendChild(v1);
 			}
+
+			$.removeattr(tieinner, "ti");
 		}
 
 		var tieinnerjson = $.q("*[tij]", tempdom);//tieinnerjson attribute

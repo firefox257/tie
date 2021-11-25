@@ -7,6 +7,7 @@
 #include <vector>
 #include <list>
 #include <functional>
+#include "var.cpp"
 using namespace std;
 #define el << "\r\n"
 
@@ -33,6 +34,28 @@ int main()
 	try1 t1;
 	t1 = t1 + 333;
 
+	var v1 = (umapvar)
+	{
+		{"title", "thi is a title"},
+		{"func",
+		funcvar(void, int i1)
+		{
+			cout << "i1: " << i1 el;
+		}},
+		{"i1", (umapvar)
+			{
+				{"func2",
+				funcvar(void)
+				{
+					cout << "func2" el;
+				}},
+
+			}
+		}
+
+	};
+
+	v1["i1"]["func2"].call<void>();
 
 	return 0;
 }

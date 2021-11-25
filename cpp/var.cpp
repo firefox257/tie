@@ -732,7 +732,7 @@ class var
 	}
 };
 
-#define varfunc(R, ...) (function<R(__VA_ARGS__)>)[&](__VA_ARGS__)->R
+#define funcvar(R, ...) (function<R(__VA_ARGS__)>)[&](__VA_ARGS__)->R
 #define umap unordered_map
 #define obvar(T, V)  var::Observer<string>("relative")
 #define gsvar(T, G, S) var::GetSet<T>(\

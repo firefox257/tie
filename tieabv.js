@@ -156,7 +156,8 @@ globalThis.$ = $;
 
 					if(t==="object")
 					{
-						parse(v, 0);
+
+						parse(v, s);
 						s.e+=",";
 					}
 					else if(t ==="function")
@@ -184,7 +185,6 @@ globalThis.$ = $;
 					var v = o[k];
 					var t = typeof v;
 					var desc = Object.getOwnPropertyDescriptor(o, k);
-
 					if(t==="object")
 					{
 						s.e+=`"${k}":`;
@@ -202,7 +202,11 @@ globalThis.$ = $;
 							s.e+=`"${k}":${v},`;
 						}
 					}
-					else if(desc.get != undefined || desc.set != undefined)
+					else if(t === "number")
+					{
+						s.e += `${v},`;
+					}
+					else if(desc != undefined && (desc.get != undefined || desc.set != undefined))
 					{
 						if(desc.get!=undefined)
 						{

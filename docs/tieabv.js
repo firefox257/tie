@@ -1,6 +1,9 @@
 //$.qa("*[tietype], *[tie], *[tieread], *[tieclass], *[tieevents], *[trackevents], *[tiedom], *[tieradio], *[tieattributes], *[tieobj]", objscaf.tempdom).forEach((tdom)=>
 //$.qa("*[tt], *[t], *[tr], *[tc], *[te], *[tke], *[td], *[tradio], *[ta], *[to]", objscaf.tempdom).forEach((tdom)=>
+//tgt tie global to.
 
+//ti tieinner
+//tij tieinnnerjson
 //const $import = (0,eval)("this");
 var $ = {};
 globalThis.$ = $;
@@ -153,12 +156,17 @@ globalThis.$ = $;
 
 					if(t==="object")
 					{
-						parse(v, 0);
+
+						parse(v, s);
 						s.e+=",";
 					}
 					else if(t ==="function")
 					{
 						s.e+=`${v},`;
+					}
+					else if(t === "number")
+					{
+						s.e += `${v},`;
 					}
 					else if(isNaN(v))
 					{
@@ -181,7 +189,6 @@ globalThis.$ = $;
 					var v = o[k];
 					var t = typeof v;
 					var desc = Object.getOwnPropertyDescriptor(o, k);
-
 					if(t==="object")
 					{
 						s.e+=`"${k}":`;
@@ -199,7 +206,11 @@ globalThis.$ = $;
 							s.e+=`"${k}":${v},`;
 						}
 					}
-					else if(desc.get != undefined || desc.set != undefined)
+					else if(t === "number")
+					{
+						s.e += `"${k}": ${v},`;
+					}
+					else if(desc != undefined && (desc.get != undefined || desc.set != undefined))
 					{
 						if(desc.get!=undefined)
 						{
@@ -275,6 +286,8 @@ globalThis.$ = $;
 })();
 
 //======================================
+//js browser modules suck. * do not use
+/*
 (function()
 {
 	var exportimport = {};
@@ -295,7 +308,14 @@ globalThis.$ = $;
 		{
 			exportitems  = r.items;
 
+			console.log("$import " + $.importbase + r.resource);
+
+
 			var txt = $.syncfetchtext($.importbase + r.resource);
+				//document.head.insertAdjacentHTML("beforeend", `<script type="module">${txt}</script>`);
+
+		//var v = new Function(txt);
+			//v();
 
 			$.boxeval(txt);
 
@@ -346,7 +366,7 @@ globalThis.$ = $;
 	}
 	$.load = $load;
 })();
-
+*/
 //=======================
 
 
@@ -371,10 +391,11 @@ globalThis.$ = $;
 			}
 			else
 			{
-				if(!__comps[name])
+				//browser modules suck.
+				/*if(!__comps[name])
 				{
 					$.import(name);
-				}
+				}*/
 				return __comps[name];
 			}
 		};
@@ -1227,11 +1248,11 @@ globalThis.$ = $;
 			var global = $.attr(tdom, "tg");//tieglobal attribute
 			$.tieglobal[global] = tdom;
 		});
-
-		$.qa("*[tg]", objscaf.tempdom).forEach((tdom)=>//tieglobal attribute
+		//tie global to appends child to global dom.
+		$.qa("*[tgt]", objscaf.tempdom).forEach((tdom)=>//tieglobal attribute
 		{
 			//console.log("at here2");
-			var global = $.attr(tdom, "tg");//tieglobal attriubte
+			var global = $.attr(tdom, "tgt");//tieglobal attriubte
 			var todom = $.tieglobal[global];
 			if(!todom)
 			{
@@ -1353,3 +1374,5 @@ globalThis.$ = $;
 
 	$.tieglobal = {};
 })();
+
+export {$};

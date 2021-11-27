@@ -164,6 +164,10 @@ globalThis.$ = $;
 					{
 						s.e+=`${v},`;
 					}
+					else if(t === "number")
+					{
+						s.e += `${v},`;
+					}
 					else if(isNaN(v))
 					{
 						s.e+=`"${v}",`;
@@ -204,7 +208,7 @@ globalThis.$ = $;
 					}
 					else if(t === "number")
 					{
-						s.e += `${v},`;
+						s.e += `"${k}": ${v},`;
 					}
 					else if(desc != undefined && (desc.get != undefined || desc.set != undefined))
 					{

@@ -704,6 +704,7 @@ globalThis.$ = $;
 		{
 			if(!parentobjscaf)
 			{
+				
 				console.log("No parent object to tieevents ");
 				console.log(dom);
 				console.trace();
@@ -1295,24 +1296,38 @@ globalThis.$ = $;
 	}
 
 	//export
-	function $doc()
+	function $doc(pobj)
 	{
 		var scaf = {};
 		scaf.listOfObjs = [];
-		$.qa("d").forEach(doc=>//doc attribute
+		var comps = [];
+		$.qa("c").forEach(doc=>//doc attribute
 		{
-			parseComp(scaf, doc);
+			//parseComp(scaf, doc);
+			comps.push(doc);
 		});
+		var parentobj = {
+			obj: pobj
+		};
+		for(var i = 0; i < comps.length; i++)
+		{
+			parseComp(scaf, comps[i], parentobj);
+		}
+
 		for(var i = 0; i < scaf.listOfObjs.length; i++)
 		{
 			 var o = scaf.listOfObjs[i];
 			 if(o.init) o.init();
 		}
+		if(parentobj && parentobj.init)parentobj.init();
+
 		for(var i = 0; i < scaf.listOfObjs.length; i++)
 		{
 			 var o = scaf.listOfObjs[i];
 			 if(o.afterinit) o.afterinit();
 		}
+		if(parentobj && parentobj.afterinit)parentobj.afterinit();
+
 		for(var i = 0; i < scaf.listOfObjs.length; i++)
 		{
 			var o = scaf.listOfObjs[i];

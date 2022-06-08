@@ -1,0 +1,1 @@
+API server has both web and API. Any web or front end goes into the web section. any API will go into the controller's folder. 

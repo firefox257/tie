@@ -1,0 +1,39 @@
+
+<!doctype html>
+<html>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scal=1"/>
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<body> <!--</body>oncontextmenu="return false;">-->
+Test api
+<span onclick = "testthis()">Click here</span>
+<script>
+	
+	function testthis()
+	{
+		fetch("/api/testpost/", 
+		{
+			method: "POST",
+			headers: 
+			{
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify(
+			{
+				Id: 123
+			})
+		})
+		.then(data =>
+		{
+			console.log(data);
+		});
+	}
+	
+</script>
+	
+</body>
+</html>
+
+
+

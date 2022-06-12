@@ -1,0 +1,32 @@
+
+const _mimetype: { [key: string]: string } = {
+	".txt": "text/plain",
+	".html": "text/html",
+	".htm": "text/html",
+	".js": "text/javascript",
+	".jpg": "image/jpeg",
+	".jpeg": "image/jpeg",
+	".png": "image/png",
+	".mp3": "audio/mpeg",
+	".mp4": "video/mp4",
+	".svg": "image/svg+xml",
+	".gltf": "model/gltf+json",
+	".bin": "application/octet-stream",
+	".css": "text/css",
+	".hdr": "application/octet-stream",
+	".json": "application/json",
+	".stl": "application/sla",
+	".dxf": "application/dxf",
+	".gif": "image/gif"
+	
+};
+
+function mimetype(url: string): string
+{
+	var i: number = url.lastIndexOf(".");
+	var tag: string = url.substring(i, url.length);
+	//console.log("tag: " + tag);
+	return _mimetype[tag];
+}
+
+globalAny.mimetype = mimetype;

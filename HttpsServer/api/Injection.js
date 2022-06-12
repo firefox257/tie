@@ -1,0 +1,2 @@
+
+DI.Scope(ILoggerService, LoggerService);

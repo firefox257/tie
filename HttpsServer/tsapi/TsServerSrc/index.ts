@@ -1,3 +1,9 @@
+const globalAny: any = globalThis;
+globalAny.globalAny = globalAny;
+
+const requireAny: any = require;
+globalAny.requireAny = requireAny;
+
 var httpport = 8080;
 var httpsport =  4443;
 
@@ -17,22 +23,21 @@ var fs = require('fs');
 }*/
 const include = (function()
 {
-	var order = [];
+	var order: string[] = [];
 	var started = false;
 	function startlist()
 	{
 		if(order.length > 0)
 		{
 			var p = order[0];
-			
+			//console.log("P:" + p);
 			order.shift();
 			if(p.startsWith("/"))
 			{
-				//console.log(`path1:${__dirname}${p}`);
-				require(`${__dirname}${p}`, startlist);
+				requireAny(`${__dirname}${p}`, startlist);
 				return;
 			}
-			require(p, startlist);
+			requireAny(p, startlist);
 		}
 		else
 		{
@@ -40,72 +45,86 @@ const include = (function()
 		}
 	}
 
-	return function(p)
+	return function(p:string)
 	{
+		//console.log("include: " + p);
 		order.push(p);
 		if(!started) startlist();
 	}
 })();
-globalThis.include = include;
-function includeDir(path)
+globalAny.include = include;
+function includeDir(path:string)
 {
-	var atpath = path;
+	//console.log("includeDir: " + path);
 	const dirPath = $path.join(__dirname, path);
-
 	//console.log("dirPath: " + dirPath);
-	//console.log("path: " + path);
-	//try
-	//{
+	try
+	{
 		var files = fs.readdirSync(dirPath);
-		files.map((file)=>
+		files.map((file:any)=>
 		{
 			if(fs.lstatSync(dirPath + file).isDirectory())
 			{
 				//console.log("--isdir");
-				//console.log(`path:${path}${file}`)
-				atpath = `${path}${file}/`;
-				includeDir(`${path}${file}/`);
+				
+				includeDir(path + file + "/");
 			}
 			else
 			{
 				//console.log(dirPath +file);
-				//console.log(`path:${path}${file}`);
 				if(file.endsWith(".js"))
 				{
-					atpath = `${path}${file}`;
-					include(`${path}${file}`);
+					include(path + file);
 				}
 			}
 		});
-	//}
-	//catch(err)
-	//{
-		//console.log(`Unable to scan ${atpath} at ${err.lineNumber}: ${err} `);
-	//}
+	}
+	catch(err)
+	{
+		console.log(`Unable to scan directory: ${err} `);
+	}
 }
 globalThis.includeDir = includeDir;
 
-include("/mimetype");
-includeDir("/Shared/Exceptions/");
-includeDir("/Shared/Api/");
-
-include("/Shared/Mapper.js");
-include("/Shared/Route.js");
-include("/Shared/InterfaceUtils.js");
-include("/Shared/DI.js");
-
-
-includeDir("/Interfaces/");
-includeDir("/Services/");
+////include("/mimetype");
+//include("/Util.js");
+includeDir("/Shared/");
 includeDir("/ServerComponents/");
-
+includeDir("/Utils/");
+includeDir("/Services/");
 includeDir("/Controllers/");
 include("/Injection.js");
+
+
+
+
 
 var httpsoptions = {
   key: fs.readFileSync(`key.pem`),
   cert: fs.readFileSync(`cert.pem`)
 };
+
+/*
+
+var httpsoptions = {
+  key: fs.readFileSync(`${__dirname}/key.pem`),
+  cert: fs.readFileSync(`${__dirname}/cert.pem`)
+};
+//*/
+
+
+
+
+
+
+////////////////////////////
+
+
+
+
+///////////////////////////
+
+
 
 
 var atsys = {};
@@ -118,7 +137,10 @@ var allowHead = {
 };
 
 
-function write(req, res, code, msg)
+
+
+
+function write(req:any, res:any, code:number, msg:string)
 {
 	var head = {
 		"Content-Type": mimetype(".txt")
@@ -127,7 +149,7 @@ function write(req, res, code, msg)
 	res.write(msg);
 	res.end();
 }
-function handelwebHandel(req, res)
+function handelwebHandel(req:any, res:any)
 {
 	//console.log("type method: " + req.method);
 	//console.log("start");
@@ -161,7 +183,7 @@ function handelwebHandel(req, res)
 	
 	if(fs.statSync(url).isDirectory()) url +="/index.html";
 	
-	fs.stat(url, function(err, stat)
+	fs.stat(url, function(err:any, stat:any)
 	{
 		if(err)
 		{
@@ -182,7 +204,7 @@ function handelwebHandel(req, res)
 				var end = parts[1] ? parseInt(parts[1], 10): fileSize -1;
 				var chunksize = (end-start) + 1;
 				var file = fs.createReadStream(url, {start, end});
-				var head = {
+				var head: { [key: string]: any }= {
 					"Content-Range": `bytes ${start}-${end}/${fileSize}`,
 					"Accept-Ranges": "bytes",
 					"Content-Length": chunksize,
@@ -193,7 +215,8 @@ function handelwebHandel(req, res)
 			}
 			else
 			{
-				var head = {
+				//: { [key: string]: string }
+				var head : { [key: string]: any } = {
 					"Content-Length": fileSize,
 					"Content-Type": mtype
 				};
@@ -207,13 +230,13 @@ function handelwebHandel(req, res)
 	
 	
 }
-function handelweb(req, res)
+function handelweb(req:any, res:any)
 {
 	try
 	{
 		handelwebHandel(req, res);
 	}
-	catch(err)
+	catch(err:any)
 	{
 		ExceptionResponse(req, res, err);
 	}
@@ -225,5 +248,6 @@ https.createServer(httpsoptions,handelweb).listen(httpsport);
 
 
 //webAppReady();
+
 
 console.log("Ready"+__dirname);

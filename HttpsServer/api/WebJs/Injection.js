@@ -1,0 +1,1 @@
+DI.Scope(ITestService, TestService);

@@ -1,0 +1,13 @@
+{
+  "name": "ApiWeb",
+  "description": "Run all web server and api sever.",
+  "private": true,
+  "author": "Aaron",
+  "license": "Not Open",
+  "devDependencies": {
+    "chokidar": ""
+  },
+  "dependencies": {
+    "fs-extra": ""
+  }
+}

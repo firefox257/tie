@@ -1,0 +1,61 @@
+
+<!doctype html>
+<html>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scal=1"/>
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+	<script src = "js/main.js" type="module"></script>
+<body> <!--</body>oncontextmenu="return false;">-->
+Test api
+<c tt = "button" t="buttonclick:onclick">click here</c>
+<c tt = "textinput" t="text:value" ></c>
+<c tt = "button" t="buttonhash:onclick">hash</c>
+
+<c tt ="modals"></c>
+<c tt = "modal">
+
+	hi htere
+</c>
+
+<script type="module">
+	
+	var at = 
+	{
+		text: "3333",
+		buttonclick(e)
+		{
+			var d = DI.Get("ITestService");
+			d.TestPost({Id:444})
+			.then((data)=>
+			{
+				console.log(data);
+			})
+			.catch((err)=>
+			{
+				console.log(`Error: ${err}`);
+			});
+		},
+		async buttonhash(e)
+		{
+			
+			console.log(at.text);
+			console.log(Sha512.hash(at.text));;
+			
+
+			
+		
+		}
+		
+	};
+	$.doc(at);
+</script>
+
+
+
+	
+</body>
+</html>
+
+
+

@@ -1,0 +1,25 @@
+{
+  "name": "ApiWeb",
+  "description": "Run all web server and api sever.",
+  "private": true,
+  "scripts": {
+    "start": "concurrently \"npm run tsc1\" \"npm run tsc2\" \"npm run copywatch1\" \"npm run copywatch2\" \"npm run copywatch3\" \"npm run copywatch4\"",
+    "tsc2": "tsc -p TsServerSrc -w",
+    "tsc1": "tsc -p TsWebSrc -w",
+    "copywatch1": "copy-and-watch --watch TsWebSrc/**/*.{html,fonts,images,js}  public/Web/",
+    "copywatch2": "copy-and-watch  SSLCerts/**  public/",
+    "copywatch3": "copy-and-watch --watch Shared/** TsServerSrc/Shared/",
+    "copywatch4": "copy-and-watch --watch Shared/** TsWebSrc/js/Shared/"
+
+  },
+  "author": "Aaron",
+  "license": "Not Open",
+  "devDependencies": {
+    "typescript": "",
+    "concurrently": "",
+    "copy-and-watch": ""
+  },
+  "dependencies": {
+    "@types/node": ""
+  }
+}

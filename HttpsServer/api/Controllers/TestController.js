@@ -21,7 +21,8 @@ Route.Set("GET", "/api/testauth/", undefined, (req, res)=>
 
 Route.Set("POST", "/api/testpost/", TestRequest, (req, res, request)=>
 {
-	
+	var log = DI.Get(ILoggerService);
+	log.Info("hi there");
 	var t = new TestResponse();
 	t.Id = request.Id;
 	t.Msg = "hi there";

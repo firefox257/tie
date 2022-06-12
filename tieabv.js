@@ -376,8 +376,10 @@ globalThis.$ = $;
 
 
 		//export
-		function $comp(name, o)
+		function $comp(name, o, css, html)
 		{
+			if(html != undefined) o.html = html;
+			if(css != undefined) o.css = css;
 			if(o)
 			{
 				if(o.css)
@@ -1295,6 +1297,62 @@ globalThis.$ = $;
 
 	}
 
+	var compExportList = [];
+	function $compExport(name,o,css, html)
+	{
+		$.comp(name, o, css, html);
+		compExportList.push( `<c tt="${name}"></c>`);
+	}
+	$.compExport = $compExport;
+
+	function makeCompExport()
+	{
+		var l = compExportList.length;
+		for(var i1 = 0; i1 < l; i1++)
+		{
+		
+			var scaf = {};
+			scaf.listOfObjs = [];
+			var temp = document.createElement("div");
+			var domdom = document.createElement("div");
+			temp.innerHTML = compExportList[0];
+			compExportList.shift();
+			var objscaf = {
+				obj: o,
+				tempdom: temp,
+				dom: domdom
+			};
+
+			parseTempDom(scaf, objscaf);
+
+			/*
+			while(temp.childNodes.length >0)
+			{
+				var v1 = temp.childNodes[0];
+				dom.appendChild(v1);
+			}
+			*/
+
+			for(var i = 0; i < scaf.listOfObjs.length; i++)
+			{
+				var o = scaf.listOfObjs[i];
+				if(o.init) o.init();
+			}
+			for(var i = 0; i < scaf.listOfObjs.length; i++)
+			{
+				var o = scaf.listOfObjs[i];
+				if(o.afterinit) o.afterinit();
+			}
+			for(var i = 0; i < scaf.listOfObjs.length; i++)
+			{
+				var o = scaf.listOfObjs[i];
+				delete o.___donotremove;
+
+			}
+		}
+
+	}
+
 	//export
 	function $doc(pobj)
 	{
@@ -1334,6 +1392,7 @@ globalThis.$ = $;
 			delete o.___donotremove;
 
 		}
+		makeCompExport();
 	}
 	$.doc = $doc;
 
@@ -1403,7 +1462,10 @@ globalThis.$ = $;
 	}
 	$.appendCss = $appendCss;
 
+
+	
+
 	$.tieglobal = {};
 })();
 
-export {$};
+globalThis.$ = $;

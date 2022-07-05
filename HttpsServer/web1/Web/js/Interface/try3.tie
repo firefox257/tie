@@ -1,0 +1,7 @@
+##js##
+function try3()
+{
+    console.log("try3 at here 1");
+}
+##export##
+try3

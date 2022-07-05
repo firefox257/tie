@@ -1,0 +1,4 @@
+##js##
+var text2 = "and try2";
+##export##
+text2

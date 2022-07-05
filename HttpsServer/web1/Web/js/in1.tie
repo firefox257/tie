@@ -1,0 +1,8 @@
+ ##js##
+
+ var text1 = "hi there at in1";
+ var text2 = "and more";
+
+ ##export##
+ text1
+ text2

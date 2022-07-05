@@ -1,0 +1,13 @@
+##include##
+testtie/text2
+##js##
+
+var text1 = "hi there";
+function func()
+{
+    console.log("Here333");
+    console.log(text2);
+}
+##export##
+text1
+func

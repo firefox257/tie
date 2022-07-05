@@ -1,0 +1,25 @@
+##include##
+js/*
+##css##
+.button
+{
+    border: 1px solid #000;
+    padding: 0 2mm;
+    background-color: #fff;
+    display:inline-block;
+}
+##html##
+<span>${text1}${text2}</span>
+<span class = "button" ti></span>
+##js##
+
+function button()
+{
+    var at = {
+
+    };
+
+    return at;
+}
+##comp##
+button

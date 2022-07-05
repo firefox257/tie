@@ -1,0 +1,7 @@
+ ##js##
+ function start()
+ {
+    console.log("here1 start");
+ }
+ ##export##
+ start

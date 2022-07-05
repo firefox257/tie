@@ -1,0 +1,23 @@
+##include##
+##css##
+.try1
+{
+    border: 1px solid #000;
+    display: inline-block;
+}
+##html##
+<span class = "try1" ti></span>
+##js##
+
+function try1()
+{
+    var at = {
+
+
+    };
+
+    return at;
+}
+
+##comp##
+try1

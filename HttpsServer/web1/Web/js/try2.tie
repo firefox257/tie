@@ -1,0 +1,16 @@
+##include##
+js/Interface/*
+##js##
+class try2
+{
+    func()
+    {
+        console.log("hi there");
+
+    }
+}
+console.log("try2.tie exec");
+try3();
+##export##
+try2
+
